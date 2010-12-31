@@ -11,18 +11,19 @@ class LearningMaterial < Jambalaya
     mk = BlueCloth.new(File.read(filename))
     tags = Nokogiri::HTML(mk.to_html)
     tags.search("body").children.each do |tag|
-      if tag.content == "\n\n"
-        tag.remove
-        # puts tag.class
-        # puts tag.inspect
-        # puts
-      else
+      
+      # Nokogiri is returning some useless nodes like:
+      # #<Nokogiri::XML::Text:0xa34a4e "\n\n">
+      if tag.content != "\n\n"
+        
+        # p is already a method name, so we need an alternative
         name = tag.name == "p" ? "para" : tag.name
         send name.to_sym, tag
       end
     end
   end
   
+  # Mapping the html tags to Jambalaya methods
   def h1(tag)
     title nil, tag.inner_html
   end
