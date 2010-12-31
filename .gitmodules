@@ -1,0 +1,3 @@
+[submodule "vendor/jambalaya"]
+	path = vendor/jambalaya
+	url = https://github.com/madriska/jambalaya.git

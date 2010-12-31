@@ -1,1 +1,5 @@
-= Proof of concept learning material 
+= Proof of concept learning material
+
+== Usage
+
+    git submodule update --init --recursive
