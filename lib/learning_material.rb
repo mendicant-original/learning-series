@@ -15,16 +15,13 @@ class LearningMaterial < Jambalaya
       # Nokogiri is returning some useless nodes like:
       # #<Nokogiri::XML::Text:0xa34a4e "\n\n">
       if tag.content != "\n\n"
-        
-        # p is already a method name, so we need an alternative
-        name = tag.name == "p" ? "para" : tag.name
-        send name.to_sym, tag
+        send "#{tag.name}_to_prawn".to_sym, tag
       end
     end
   end
   
   # Mapping the html tags to Jambalaya methods
-  def h1(tag)
+  def h1_to_prawn(tag)
     chapter_number = nil
     str = tag.inner_html
     if str =~ /^\d+/
@@ -33,15 +30,23 @@ class LearningMaterial < Jambalaya
     title chapter_number, str.strip
   end
   
-  def h2(tag)
+  def h2_to_prawn(tag)
     section tag.inner_html
   end
   
-  def para(tag)
+  # This renders the aside
+  # Yes, I'm cheating
+  def h6_to_prawn(tag)
+    aside(tag["title"]) do
+      prose tag.inner_html
+    end
+  end
+  
+  def p_to_prawn(tag)
     prose tag.inner_html
   end
   
-  def pre(tag)
+  def pre_to_prawn(tag)
     indent(0.2.in) do
       previous_color = fill_color
       fill_color "222222"
@@ -53,7 +58,7 @@ class LearningMaterial < Jambalaya
     end
   end
   
-  def ul(tag)
+  def ul_to_prawn(tag)
     items = tag.children.map do |li|
       li.inner_html.empty? ? nil : li.inner_html
     end
