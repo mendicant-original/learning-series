@@ -42,7 +42,15 @@ class LearningMaterial < Jambalaya
   end
   
   def pre(tag)
-    code tag.children[0].inner_html
+    indent(0.2.in) do
+      previous_color = fill_color
+      fill_color "222222"
+      
+      snippet = tag.children[0].inner_html.gsub("&gt;", ">").gsub("&lt;", "<")
+      code(snippet, 8)
+      
+      fill_color previous_color
+    end
   end
   
   def ul(tag)

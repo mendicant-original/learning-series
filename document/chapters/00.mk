@@ -28,13 +28,13 @@ Test Environment
 We will use the Test::Unit library from the Ruby stdlib and the contest gem which adds just a thin layer on top of the Test::Unit API allowing us to write for example
     
     test "should do stuff" do
-        assert true
+      assert true
     end
     
 instead of
 
     def test_should_do_stuff
-        assert true
+      assert true
     end
 
 The contest library also supports nested context blocks, which make the organization of your test suite easier. Like in RSpec, every context block can have its own setup and teardown methods and nested contexts inherit the setup/teardown from their parents.

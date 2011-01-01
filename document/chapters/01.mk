@@ -97,6 +97,7 @@ To remedy this, we could extract the first row and assign it to a separate varia
       assert_equal ["name", "age", "occupation"], my_table.headers
     end
 
+
     class Table
       attr_reader :rows, :headers
 
