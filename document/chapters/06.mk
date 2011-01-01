@@ -18,30 +18,30 @@ When the Table class gets initialized the rows and columns are populated with th
 
 Upon initializing the Bricks::Table object, both @rows and @columns are being initialized and the seed data sent into the constructor seems to be processed row by row in the #add_row method. 
 
-  module Bricks
-    class Table
-      # code omitted
+    module Bricks
+      class Table
+        # code omitted
 
-      attr_reader :rows, :columns
-      def initialize(*args)
-        @rows    ||= Bricks::Index.new
-        @columns ||= Bricks::Index.new
+        attr_reader :rows, :columns
+        def initialize(*args)
+          @rows    ||= Bricks::Index.new
+          @columns ||= Bricks::Index.new
       
-        # code to extract options and to set column headers omitted
-        data = args.first.dup   # to avoid alter original data  
+          # code to extract options and to set column headers omitted
+          data = args.first.dup   # to avoid alter original data  
 
-        data.each_with_index do |row, index|
-          add_row row
+          data.each_with_index do |row, index|
+            add_row row
+          end
         end
-      end
 
-      def add_row(new_row)
-        add_and_update(new_row, rows, columns)
-      end
+        def add_row(new_row)
+          add_and_update(new_row, rows, columns)
+        end
 
-      # code omitted
+        # code omitted
+      end
     end
-  end
 
 As you can see in the code above, the rows are immediately sent on to a method called #add_and_update that also takes the columns into account. Digging further into the code reveals that the #add_and_update method can handle both adding rows or adding columns just by switching out which of the two is considered to be the primary or the secondary target of the operation.
 

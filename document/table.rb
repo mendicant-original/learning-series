@@ -12,11 +12,8 @@ LearningMaterial.generate("table.pdf") do
 
   Dir.chdir(chapters_folder) do
     Dir.glob("*") do |chapter|
-      # start_new_page      
-      # load_chapter(File.join(chapters_folder, chapter))
+      start_new_page      
+      load_chapter(File.join(chapters_folder, chapter))
     end
   end
-  
-  start_new_page
-  load_chapter(File.join(chapters_folder, "06.mk"))
 end
