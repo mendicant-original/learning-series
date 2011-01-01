@@ -25,7 +25,12 @@ class LearningMaterial < Jambalaya
   
   # Mapping the html tags to Jambalaya methods
   def h1(tag)
-    title nil, tag.inner_html
+    chapter_number = nil
+    str = tag.inner_html
+    if str =~ /^\d+/
+      chapter_number = "CHAPTER #{str.slice!(/^\d+/).to_i}"
+    end
+    title chapter_number, str.strip
   end
   
   def h2(tag)
