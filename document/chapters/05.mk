@@ -101,6 +101,8 @@ Here's the code to guard against both potential sources of error:
         @headers.delete(old_name)
       end
 
+This really needs to be broken into two snippets:
+
       def add_column(col, pos=nil)
         i = pos.nil? ? rows.first.length : pos
         if header_support
