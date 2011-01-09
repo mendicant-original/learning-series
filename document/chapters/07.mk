@@ -84,10 +84,10 @@ Here is an overview of the responsibility and and features of each:
 * references the table's @matrix and the collection of rows or columns @proxy
 * also keeps track of its rows or columns @index within the @proxy collection
 * Take care of operations within an individual row or column like:
-  * mapping the row or column values
-  * deleting the row or column
-  * accessing row or column elements
-  * renaming or accessing the column name
+    * mapping the row or column values
+    * deleting the row or column
+    * accessing row or column elements
+    * renaming or accessing the column name
   
 You might have noticed that all classes have a reference to the same instance variable @matrix that is initialized in the Table class and which is basically the equivalent to @rows in the first solution. So one could say that the data is essentially stored in a 2-dimensional array representing the rows. That same instance variable is manipulated by all classes. In fact, even the classes representing a single column or row have a reference and manipulate it.
 
@@ -149,7 +149,7 @@ This is how W.P.'s classes work together to accomplish the same:
 
     end
 
-The solutions are very similar in that they both iterate through the row data and yield the element at the column index to an arbitrary block. However, the API that W.P.'s solution exposes is in some ways cleaner and more attractive. To be able to write table.columns["some_col"].map! &block is much more familiar than table.transform_columns["some_col"] &block.
+The solutions are very similar in that they both iterate through the row data in order to yield the element at the column index to an arbitrary block. However, the API that W.P.'s solution exposes is in some ways cleaner and more attractive. To be able to write table.columns["some_col"].map! &block is much more familiar than table.transform_columns["some_col"] &block.
 
 A noteworthy feature of the code is including the Enumerable module in the proxy objects. By overriding the each() method in the classes that include Enumerable, we essentially (re)define what we consider to be the unit that we would like to be handled by iterator methods. This is an incredibly powerful feature, since many other methods, that rely on the particular implementation of each() in the background (e.g. select(), map() and inject()), will automatically work as expected. 
 
