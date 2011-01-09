@@ -153,6 +153,8 @@ The solutions are very similar in that they both iterate through the row data an
 
 A noteworthy feature of the code is including the Enumerable module in the proxy objects. By overriding the each() method in the classes that include Enumerable, we essentially (re)define what we consider to be the unit that we would like to be handled by iterator methods. This is an incredibly powerful feature, since many other methods, that rely on the particular implementation of each() in the background (e.g. select(), map() and inject()), will automatically work as expected. 
 
+page_break
+
 <h6 title="The PracticingRubyQuote">
 From [Practicing Ruby] Issue #9: Uses For Modules, Part 2 of 4 by Gregory Brown:
 

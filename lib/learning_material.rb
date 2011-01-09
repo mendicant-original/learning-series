@@ -49,9 +49,17 @@ class LearningMaterial < Jambalaya
   end
   
   def p_to_prawn(tag)
-    prose tag.inner_html
+    if tag.inner_html =~ /page_break/
+      break_page
+    else
+      prose tag.inner_html
+    end
   end
   alias :text_to_prawn :p_to_prawn
+  
+  def break_page
+    start_new_page
+  end
   
   def pre_to_prawn(tag)
     group do
