@@ -10,7 +10,11 @@ class LearningMaterial < Jambalaya
   def load_chapter(filename)
     mk = BlueCloth.new(File.read(filename))
     tags = Nokogiri::HTML(mk.to_html)
-    tags.search("body").children.each do |tag|
+    process_tags tags.search("body").children
+  end
+  
+  def process_tags(tags)
+    tags.each do |tag|
       
       # Nokogiri is returning some useless nodes like:
       # #<Nokogiri::XML::Text:0xa34a4e "\n\n">
@@ -57,10 +61,6 @@ class LearningMaterial < Jambalaya
   end
   alias :text_to_prawn :p_to_prawn
   
-  def break_page
-    start_new_page
-  end
-  
   def pre_to_prawn(tag)
     group do
       indent(0.2.in) do
@@ -75,10 +75,45 @@ class LearningMaterial < Jambalaya
     end
   end
   
-  def ul_to_prawn(tag)
-    items = tag.children.map do |li|
-      li.inner_html.empty? ? nil : li.inner_html
+  def ul_to_prawn(tag, pad = 0)
+    font("serif", :size => 9) do
+      tag.children.each do |li|
+        unless li.inner_html.empty?
+          
+          if li.children.size == 1
+            list_item(li.inner_html, pad)
+            
+          else
+            li.children.each do |child|
+              if child.name == "ul"
+                ul_to_prawn(child, pad + 0.30.in)
+              else
+                list_item(child.to_s, pad)
+              end
+            end
+          end
+          
+        end
+      end
     end
-    list *items.compact
+
+    move_down 0.05.in
   end
+  
+  def list_item(li, pad = 0)
+    indent(pad) do
+      float { text "•" }
+      indent(0.15.in) do
+        text li.gsub(/\s+/," "), 
+          :inline_format => true,
+          :leading       => 2
+      end
+    end
+    move_down 0.05.in
+  end
+  
+  def break_page
+    start_new_page
+  end
+  
 end

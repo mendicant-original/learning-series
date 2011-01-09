@@ -57,6 +57,8 @@ Here is an overview of the responsibility and and features of each:
 * Has a #rows and #columns method that return the respective proxy objects
 * doesn't actually manipulate the data in any way
 
+Here's a snippet of the Table class:
+
     class Table
       # code omitted
 
