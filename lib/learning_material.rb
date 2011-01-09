@@ -45,6 +45,7 @@ class LearningMaterial < Jambalaya
   def p_to_prawn(tag)
     prose tag.inner_html
   end
+  alias :text_to_prawn :p_to_prawn
   
   def pre_to_prawn(tag)
     indent(0.2.in) do
