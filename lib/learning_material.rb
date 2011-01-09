@@ -31,7 +31,13 @@ class LearningMaterial < Jambalaya
   end
   
   def h2_to_prawn(tag)
-    section tag.inner_html
+    move_down 0.1.in
+
+    font("sans", :style => :bold, :size => 12) do
+      text tag.inner_html
+    end
+    
+    move_down 0.25.in
   end
   
   # This renders the aside
@@ -48,14 +54,16 @@ class LearningMaterial < Jambalaya
   alias :text_to_prawn :p_to_prawn
   
   def pre_to_prawn(tag)
-    indent(0.2.in) do
-      previous_color = fill_color
-      fill_color "222222"
+    group do
+      indent(0.2.in) do
+        previous_color = fill_color
+        fill_color "222222"
       
-      snippet = tag.children[0].inner_html.gsub("&gt;", ">").gsub("&lt;", "<")
-      code(snippet, 8)
+        snippet = tag.children[0].inner_html.gsub("&gt;", ">").gsub("&lt;", "<")
+        code(snippet, 8)
       
-      fill_color previous_color
+        fill_color previous_color
+      end
     end
   end
   
