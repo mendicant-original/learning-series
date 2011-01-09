@@ -58,7 +58,7 @@ Here is an overview of the responsibility and and features of each:
 * doesn't actually manipulate the data in any way
 
     class Table
-     # code omitted
+      # code omitted
 
       # Returns ColumnsProxy object capable of columns operations
       def columns
@@ -109,13 +109,13 @@ And now to the implementation details. As a reminder, here is how we accomplishe
 
     class Table
 
-       def transform_columns(pos, &block)
-         pos = column_index(pos)
-         @rows.each do |row|
-           row[pos] = yield row[pos]
-         end
-       end
-   
+      def transform_columns(pos, &block)
+        pos = column_index(pos)
+        @rows.each do |row|
+          row[pos] = yield row[pos]
+        end
+      end
+
     end
 
 This is how W.P.'s classes work together to accomplish the same:
@@ -158,14 +158,5 @@ page_break
 <h6 title="The PracticingRubyQuote">
 From [Practicing Ruby] Issue #9: Uses For Modules, Part 2 of 4 by Gregory Brown:
 
-(....), there is surprising
-power in having a primitive built into your programming language
-which trivializes the implementation of the Template Method design
-pattern.  If you look at Ruby's Enumerable module and the powerful
-features it offers, you might think it would be a much more
-complicated example to study.  But it too hinges on Template Method and
-requires only an each() method to give you all sorts of complex
-functionality including things like select(), map(), and inject().  If
-you haven't tried it before, you should certainly try to roll your own
-Enumerable module to get a sense of just how useful mixins can be.
+(....), there is surprising power in having a primitive built into your programming language which trivializes the implementation of the Template Method design pattern.  If you look at Ruby's Enumerable module and the powerful features it offers, you might think it would be a much more complicated example to study.  But it too hinges on Template Method and requires only an each() method to give you all sorts of complex functionality including things like select(), map(), and inject(). If you haven't tried it before, you should certainly try to roll your own Enumerable module to get a sense of just how useful mixins can be.
 </h6>
