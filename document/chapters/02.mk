@@ -1,16 +1,16 @@
 02 Data Access
 ==============
 
-Consider what happens with the implementation from the last chapter when we provide the following data:
+The way things stand now, the Table class is siphoning off our first row as the column headers no matter what:
 
     >> my _table = Table.new [[1, 2, 3], [4,5,6]]
-    >>  my_table.rows[0]
+    >> my_table.rows[0]
     => [4,5,6]
 
     >> my_table.headers
     => [1,2,3]
 
-The way things stand now, the Table class is siphoning off our first row as the column headers no matter what. While we want to allow for column names to be set, that feature should be optional. We need to make that feature configurable. Here we need to update a previous test:
+While we want to allow for column names to be set, that feature should be optional. We need to make that feature configurable. In this case we need to edit a previous test:
 
     test "can be initialized with a two-dimensional array" do
       my_table = Table.new(@simple_data)
@@ -38,7 +38,7 @@ The way things stand now, the Table class is siphoning off our first row as the 
       end
     end
 
-Optimally, we would like the API to be able to access the columns either by name or by index, so that we can retrieve the data by asking for "the name field of the third row" or "the first column of the third row".
+Optimally, we would like the API to be able to access the columns either by name or by index, so that we can for instance retrieve the data by asking for "the 'name' field in the third row" or "the first column in the third row".
 
 This is what a test for this feature could look like:
 

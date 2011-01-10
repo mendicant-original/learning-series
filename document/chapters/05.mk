@@ -1,11 +1,11 @@
 05 Handling Exceptions and Bad Input
 ======================
 
-In a perfect world, we could probably be done at this point. However, we have so far completely ignored an important aspect of solving this problem, namely dealing with potential error sources.
- 
-We start with errors that could occur when accessing table data if non-existent rows or columns are being referenced. We could call them "out of bounds" errors. Consider the following scenario with the table implementation from the first example:
+In a perfect world, we could probably be done at this point. However, we have so far completely ignored an important aspect, namely dealing with potential errors.
 
-    >>  @data = [[1,2,3], [4,5,6]]
+We start with mimicking errors that could occur when accessing table data if non-existent rows or columns are being referenced. We could call them "out of bounds" errors. Consider the following scenario:
+
+    >> @data = [[1,2,3], [4,5,6]]
     >> my_table = Table.new(@data)
     >> my_table[99, 99]
     => NoMethodError: undefined method `[]' for nil:NilClass
@@ -23,7 +23,7 @@ As a reminder, here is the code that is for now unprepared to handle such a case
 
 If the referenced row is out of bounds (rows[row]) then nil gets returned. This is in itself something that you might want to handle with either an error or a warning (or else accept that nil gets returned in such cases). If we attempt to retrieve a particular column in that non-existent row, however, we have an unhandled NoMethodError on our hands.
 
-A simple fix could involve checking the requested index before attempting to retrieve the cell. You can also see in the code below how to set up an use custom error classes.
+A simple fix could involve checking the requested index before attempting to retrieve the cell. The code below demonstrates setting up and using custom error classes.
 
     class Table
     
@@ -52,7 +52,7 @@ Since columns can be referenced either by their index or by their name we could 
     >> my_table[2, "bad_column"]
     => TypeError: can't convert String into Integer
 
-Or what if we try and insert a new column with the name of an existing column or rename one to name name that is already taken:
+Or what if we were to insert or rename a column using a name that is already taken:
 
     >> my_table.add_column(["age", 10, 11, 12, 13, 14])
     >> my_table.headers
@@ -66,9 +66,11 @@ Or what if we try and insert a new column with the name of an existing column or
     >> my_table[2, "age"]
     => George
 
-For the first case, we can apply a similar error handling strategy as for the rows by intercepting the method that determines the numeric index of the column based on either a string or an integer. To avoid duplicate column names, we could just set up error handling that checks the @headers array when appropriate. There might however be a better way of solving this problem, one that does not require setting up yet another custom error class. If @headers were implemented as a hash rather than an array, we could avoid the problem of duplicate names just by dint of Hash semantics that does not allow for duplicate keys.
+To handle the case of referencing a column that doesn't exist, we can apply a similar strategy as for the rows. We can intercept the method that determines the numeric index of the column based on either a string or an integer. 
 
-Here's the code to guard against both potential sources of error:
+To avoid duplicate column names, we could opt to check the @headers array when appropriate. There might however be a better way of solving this problem that does not require setting up yet another custom error class. Changing the internal representation of @headers from an array to a hash facilitates avoiding duplicate names, since hashes don't allow for duplicate keys.
+
+Here then is the code to guard against both potential sources of error:
 
     class Table
  

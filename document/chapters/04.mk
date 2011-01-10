@@ -1,16 +1,16 @@
 04 Column Manipulations
 =======================
 
-By modeling the table data as a two-dimensional array, we were able to easily access and manipulate rows using common Array methods . However, as we shall see now that we turn our attention to implementing column functionality, this "row-centric" representation is not without limitation. For example to retrieving the contents of a particular column, would require iterating through each row, extracting each data cell of that column and map it into a new array. 
+By modeling the table data as a two-dimensional array, we were able to easily access and manipulate rows using common Array methods. However, as we turn our attention to column functionality, we shall see that this "row-centric" representation is not without cost. For example, retrieving the contents of a particular column would necessitate iterating through each row, extracting the data cell of that column and mapping it to a new array. 
 
-At this point you might be tempted to use a convenient array method, such as Array#transpose to temporarily remap the rows as columns. Here is a quick demonstration of what this method accomplishes:
+At this point one might be tempted to use a convenient array method, such as Array#transpose to temporarily remap the rows as columns. Here is a quick demonstration of what this method accomplishes:
 
     >> @simple_data.transpose
     => [["name", "Tom", "Beth", "George", "Laura", "Marilyn"],
         ["age", 32, 12, 45, 23, 84],
         ["occupation", "engineer", "student", "photographer", "aviator", "retiree"]]
       
-This would allow us to essentially duplicate all the row methods, re-purposed for column manipulation. So what exactly are the disadvantages of using #transpose? The most obvious is that it creates a new array, so it effectively doubles the data held in memory. Suppose you want to use tranpose to easily insert a column. Something like:
+This would allow us to essentially duplicate all the row methods, re-purposed for column manipulation. So what exactly is the problem with using transpose()? The most obvious is that it creates a new array, so it effectively doubles the data held in memory. Suppose you want to use tranpose() to easily insert a column. Something like:
 
     def insert_column(pos)
       columns = @rows.transpose
@@ -18,11 +18,11 @@ This would allow us to essentially duplicate all the row methods, re-purposed fo
       @rows = columns.transpose
     end
 
-As you can see in the code above, we have to use transpose twice, once to map the rows to columns and a second time to update the rows. Extra steps and processing time are required.
+As you can see in the code above, we have to use transpose() twice, once to map the rows to columns and a second time to update the rows. Extra steps and processing time are required.
 
 Another, less obvious drawback is that transpose is quite picky about its input. Consider the following:
 
-    >> table = [[1, 2, 3], [4,  5], [6]]    # rows with different lengths 
+    >> table = [[1, 2, 3], [4,  5], [6]] # rows with different lengths 
     >> table.transpose
     => IndexError: element size differs (2 should be 3)
 
@@ -69,7 +69,7 @@ Since we have already implemented column names and are saving a reference to the
       end
     end
  
-As with rows, we want to be able to expand our data set by appending or inserting a new column. We will implement adding a column similarly to the equivalent row method. Again we want to support a position argument for insertion and a default behavior of appending the column at the end. However, we have to remember to take into account the column names along with the fact that they are optional.
+As with rows, we want to be able to expand our data set by appending or inserting a new column. We will implement adding a column similarly to the equivalent row method. Again, we want to support a position argument for insertion and a default behavior of appending the column at the end. However, we have to remember to take into account the column names along with the fact that they are optional.
  
     test "can append a column" do
       to_append = ["location", "Italy", "Mexico", "USA", "Finland", "China"]
@@ -85,7 +85,7 @@ As with rows, we want to be able to expand our data set by appending or insertin
       assert_equal "Brown", @simple_table[0,1]
     end
     
-The #add_column method needs to know whether headers are being used or not. As such, we store that option in a boolean variable, @header_support. Of course this is a matter of taste. We could just as easily have checked whether @headers is empty.
+The add_column() method needs to know whether headers are being used or not. As such, we store that option in a boolean variable, @header_support. Of course this is a matter of taste. We could just as easily have checked whether the @headers array is empty.
     
     class Table
       attr_reader :rows, :headers, :header_support
@@ -108,7 +108,7 @@ The #add_column method needs to know whether headers are being used or not. As s
     end
 
 
-A similar procedure is needed for deleting a column, namely deleting the column item in each row.
+A similar procedure is needed for deleting a column. That is, in each row we need to delete the item belonging to that column.
 
     test "can delete a column from any position" do
       @simple_table.delete_column(1)
@@ -160,7 +160,7 @@ Last but not least, we also want to filter out columns that don't meet a particu
       assert_equal ["age"], @simple_table.headers
     end
   
-Given our current, row-biased approach there is simply no easy way of doing this. We have to temporarily create each column and check it against the condition defined in the block sent to the select_columns() method. Since we expect the block to return true or false we can take that as an indication for whether we should delete or keep the column, the execution of which we will delegate to the existing delete_column() method.      
+Given our current, row-biased approach there is simply no easy way of doing this. We have to temporarily create each column and check it against the condition defined in the block sent to the select_columns() method. Since we expect the block to return true or false we can take that as an indication for whether we should delete or keep the column. The execution of the latter we will delegate to the existing delete_column() method.
     
     class Table
 

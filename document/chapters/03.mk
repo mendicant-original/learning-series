@@ -1,7 +1,7 @@
 03 Row Manipulations
 ====================
 
-We have already set up a method to retrieve the collection of rows. We can also append a new row at the end (see #add_row method in Chapter One). But what if we want to insert a new row in a particular position and not at the end? 
+We have already set up a method to retrieve the collection of rows. We can also append a new row at the end (see the add_row() method in Chapter One). But what if we want to insert a new row in a particular position and not at the end? 
 
     context "row manipulations" do
       setup do
@@ -14,7 +14,7 @@ We have already set up a method to retrieve the collection of rows. We can also 
       end
     end  
  
-Note that instead of creating a brand new method for inserting a row at a particular position, we simply change the existing #add_row method to take an optional second argument representing the position where the new row should be inserted. If we don't send in a position, the new row will be appended at the end by default.
+Instead of creating a brand new method for inserting a row at a particular position, we simply change the existing add_row() method to take an optional second argument representing the position where the new row should be inserted. If we don't send in a position, the new row will be appended at the end by default.
  
     class Table
     
@@ -44,7 +44,7 @@ Now we want to be able to retrieve a single row in order to delete it or to tran
       end
     end
 
-To delete a particular row from our table, we set up our test to check that a deleted row has indeed been replaced:
+To delete a particular row from our table, we set up our test to check that a deleted row has actually been replaced:
 
     test "should be able to delete a row" do
       to_be_deleted = @simple_table.row(2)
@@ -60,7 +60,7 @@ To delete a particular row from our table, we set up our test to check that a de
       end
     end
 
-Next we need to implement code to run a row-level transformation, which should affect all data cells of that row in a user-defined way. In other words, we have to design our API in such a way it can accept the transformation code as an argument. This is where blocks come into play.
+Next we need to write a method to triggers a row-level transformation that affects all data cells of that row in a user-defined way. In other words, we have to design our API in such a way it can accept the transformation code as an argument. This is where blocks come into play.
 
     test "should update the transformed row cells" do
       @simple_table.transform_row(0) do |cell| 
