@@ -1,26 +1,28 @@
 Introduction
 ============
 
-The problem that we are examining here was the final exam assigned to the RMU core class of September 2010. This walkthrough presents how an acceptable solution can be reached using step by step Test Driven Development (TDD) practices. By the fourth chapter we will have arrived at a solution that is a conglomeration of the most common answers submitted. The later chapters discuss other solutions that would be more suitable for real-world application in that they set the groundwork for future requirements and maximizing performance.
+The Ruby Mendicant University (RMU) takes a problem-driven approach to teaching Ruby. During the core course students are given a set of assignments, which they solve mostly on their own, but also in consultation with their peers and feedback from Gregory Brown, the founder of RMU.
 
-Reading Notes
--------------
+Once the course is completed the assignments are posted publicly and can be used as learning material for self study. The RMU Learning Series examines actual solutions submitted by alumni to a particular problem. The purpose is to give you an overview of the types of solutions presented and the reasoning that went into producing them.
 
-If you are new to Ruby or to TDD you will appreciate the first four chapters which walk you through developing a solution following TDD best practices. For those of you with more experience in these ares, you might want to scan the first four chapters and take a closer look at the later chapters.
+In this first installment we will look at the final exam assigned to the RMU core class of September 2010.
 
 The Problem
 -----------
 
-The RMU assignment was to build a general purpose table structure that can be used in a wide range of data processing scenarios. When exactly would you need to roll your own Table solution? Well, for example if you import (legacy) data from a CSV or YAML file and would like to manipulate, present or report on it. 
+The task was to build a general purpose table structure that can be used in a wide range of data processing scenarios. You can view the exact list of requirements on Github: https://github.com/rmu/s1-final
 
-As a minimum, the API of the table structure needed to implement the following features:
+At a minimum, the API of the table structure needed to implement the following features:
 
 * add, insert and delete rows and columns
+* support named column headers
 * access a particular row, column or cell
 * update values of an entire row or column
 * filter rows and columns by given criteria
 
-As the end product is likely to be fairly complex, it is easy to get overwhelmed if we tried to implement all the features at once. In this case, a better approach would be to start simple and add code for one requirement at the time. In other words, basic TDD.
+As the end product is likely to be fairly complex, it is easy to get overwhelmed if we tried to implement all the features at once. If you read through the full list of requirements you can see that they become progressively more complex. This type of problem lends itself particularly well to a Test Driven Development (TDD) approach. You can start with the first requirement, design a test and then write the code to make it pass. Then repeat the same procedure for the next requirement, and so on.
+
+The first four chapters walk through this TDD approach and, as we shall see, the resulting solution is somewhat similar to that submitted by the majority of students in this session. In the later chapters we will discuss some more unique approaches that make a deliberate attempt to incorporate a variety of Ruby best practices.
 
 Test Environment
 ----------------
