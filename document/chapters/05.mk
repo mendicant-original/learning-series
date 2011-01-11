@@ -23,7 +23,7 @@ As a reminder, here is the code that is for now unprepared to handle such a case
 
 If the referenced row is out of bounds (rows[row]) then nil gets returned. This is in itself something that you might want to handle with either an error or a warning (or else accept that nil gets returned in such cases). If we attempt to retrieve a particular column in that non-existent row, however, we have an unhandled NoMethodError on our hands.
 
-A simple fix could involve checking the requested index before attempting to retrieve the cell. The code below demonstrates setting up and using custom error classes.
+A simple fix could involve checking the requested index before attempting to retrieve the cell. The code below also demonstrates setting up and using custom error classes.
 
     class Table
     
@@ -68,7 +68,7 @@ Or what if we were to insert or rename a column using a name that is already tak
 
 To handle the case of referencing a column that doesn't exist, we can apply a similar strategy as for the rows. We can intercept the method that determines the numeric index of the column based on either a string or an integer. 
 
-To avoid duplicate column names, we could opt to check the @headers array when appropriate. There might however be a better way of solving this problem that does not require setting up yet another custom error class. Changing the internal representation of @headers from an array to a hash facilitates avoiding duplicate names, since hashes don't allow for duplicate keys.
+To avoid duplicate column names, we could just opt to check the @headers array when appropriate. There might however be a more elegant way of tackling this problem. Changing the internal representation of @headers from an array to a hash facilitates avoiding duplicate names, since hashes don't allow for duplicate keys.
 
 Here then is the code to guard against both potential sources of error:
 
@@ -103,8 +103,6 @@ Here then is the code to guard against both potential sources of error:
         @headers.delete(old_name)
       end
 
-This really needs to be broken into two snippets:
-
       def add_column(col, pos=nil)
         i = pos.nil? ? rows.first.length : pos
         if header_support
@@ -116,6 +114,8 @@ This really needs to be broken into two snippets:
           row.insert(i, col.shift)
         end
       end
+      
+page_break
 
       def delete_column(pos)
         pos = column_index(pos)
@@ -139,20 +139,17 @@ This really needs to be broken into two snippets:
     end
 
 Handling bad input
-------------------
+-------------------
 
-From incorrect data access we now move out attention to faulty data input. The following errors could fall into this category:
+In a table we expect all rows to have the same length and also all columns to have the same number of elements. Here we will focus on input that does not conform to this basic expectation.
 
-* Rows or columns of uneven length, either in the seed data or with rows/columns that get added later.
-* Inconsistently nested two-dimensional array in the seed data.
+Generally speaking, there are two main courses of action in dealing with bad input: either to reject it by raising an error or adapt the input by bringing it somehow back into the fold. 
 
-The length of rows and columns is to be the problem that is most likely to cause trouble down the road, so that's the one we'll be focusing on.
+One way to change rows and columns so that they have the expected length might be to pad the short ones and truncate the ones that are too long. When it comes to rows, we might get away with this strategy, but padding short columns could have some undesired side effects. In tables with header support, for instance, we assume the first element to be the header name. Should the header not be included in the new column, then the padding approach will cause a missing header to "fail silently": the first element will be appointed as the header, while the last element will be supplied by padding. 
 
-When it comes to dealing with bad input there are two main courses of action: reject the input data by raising an error or adapt the data to bring it back into the fold. One way to adapt new rows and columns might be to pad the short ones and truncate the ones that are too long.
+Truncating rows/columns that are too long leaves one with an uneasy feeling, even if the truncation is accompanied by a warning. 
 
-However, padding columns that are too short comes with its own set of problems. In tables with header support, for instance, we assume that the first element on a new column is the header name. If the header is not included in the new column and padding is implemented as a remedy for unequal column lengths, then the case of the missing header will fail silently, as the first element will be designated as the header while the last element will be padded with nil. Padding rows might be less of a problem, but even there you could think of some undesired side effects. Truncating rows/columns that are too long leaves one with an uneasy feeling, even if the truncation is accompanied by a warning. 
-
-Considering all these issues with truncation/padding, we will instead implement raising exceptions upon encountering rows or columns with unequal lenths.
+Considering all these issues with truncation/padding, we will instead raise an exceptions upon encountering rows or columns with unexpected lengths.
 
     class Table
 
@@ -210,7 +207,7 @@ Considering all these issues with truncation/padding, we will instead implement 
 Data corruption
 ---------------
 
-The user of our API can at any time inadvertently and without noticing corrupt the table data by tinkering with the seed data. Conversely, changes initiated through the table will also affect the seed data. 
+The user of our API can at any time inadvertently corrupt the table data by tinkering with the seed data. Conversely, changes initiated through the table will also affect the seed data. 
 
 The root of the issue is that in Ruby variables hold references to objects, not the objects themselves. So if the same object is referenced by different variables, we need to keep in mind that changes made to the object will be visible no matter which variable we chose to reference the object by. Here's a simple example to illustrate the point:
 
@@ -252,7 +249,7 @@ Here is another example of how altering the seed data will be reflected when we 
     >> my_table[2, 2]
     => "king of the world"
 
-Let's say that to prevent accidental data corruption we want to duplicate the seed data when initializing the table. We might try to use Object#dup to accomplish this.
+Let's say that to prevent accidental data corruption we want to somehow duplicate the seed data when we initialize the table. We might try to use Object#dup to accomplish this.
 
     class Table
 
@@ -263,24 +260,24 @@ Let's say that to prevent accidental data corruption we want to duplicate the se
       
     end
 
-Simple, isn't it? Except that this doesn't solve our problem. The previous example behavior remains.
+Simple, isn't it? Except that this doesn't solve our problem. The behavior from the previous example remains.
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> @simple_data[2][2] = "king of the world"
     >> my_table[2, 2]
     => "king of the world"
 
-Let's examine the dup method a little closer:
+Let's examine the dup() method a little closer:
 
 <h6 title="From the Pickaxe book: dup()">
 dup()
 
-Produces a shallow copy of obj—the instance variables of obj are copied, but not the objects they reference. dup copies the tainted state of obj. See also the discussion under Object#clone.
+Produces a shallow copy of obj — the instance variables of obj are copied, but not the objects they reference. dup copies the tainted state of obj. See also the discussion under Object#clone.
 
 In general, dup duplicates just the state of an object, while clone also copies the state, any associated singleton class, and any internal ﬂags (such as whether the object is frozen). The taint status is copied by both dup and clone. 
 </h6>
 
-So if we dup() the seed data that's passed to our initialize method before we assign it to the @rows instance variable, the outer array that @rows points to is indeed a different object from the outer array held in @simple_data, but Table#rows and @simple_data are still both referencing the same internal arrays or the actual rows. To prove the point:
+So if we dup() the seed data that's passed to our initialize method and before we assign it to Table#rows, the outer array that @rows points to is indeed a different object from the outer array held in @simple_data. However, Table#rows and @simple_data are still both referencing the same internal arrays, meaning the actual rows. To prove the point:
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> my_table.rows.object_id    # note that the output is run specific
@@ -294,8 +291,10 @@ So if we dup() the seed data that's passed to our initialize method before we as
     => 2151825160
 
 
-The only really reliable way to create a brand new object when we assign it to another variable is marshaling. From the Pickaxe book: [Marshaling] is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed. ..... 
-Saving an object and some or all of its components is done using the method Marshal.dump. Typically, you will dump an entire object tree starting with some given object. Later, you can reconstitute the object using Marshal.load. 
+The only really reliable way to create a brand new object when we assign it to another variable is marshaling. 
+
+From the Pickaxe book: *[Marshaling] is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed. [.....] 
+Saving an object and some or all of its components is done using the method Marshal.dump. Typically, you will dump an entire object tree starting with some given object. Later, you can reconstitute the object using Marshal.load.*
 
     class Table
 
@@ -317,4 +316,4 @@ Now there is no cross-reference between @simple_data and the table @rows. We can
     >> @simple_data[0]
     => ["name", "age", "occupation"]
 
-We cannot say that this method is without drawbacks. Apart from the time that it takes to marshall and unmarshall the seed data we are temporarily storing two copies of the same nested array.
+Unfortunately this method is also not without drawbacks. Apart from the time that it takes to marshall and unmarshall the seed data, we are temporarily storing two copies of the same nested array.
