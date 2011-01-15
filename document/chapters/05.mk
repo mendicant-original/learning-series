@@ -40,7 +40,9 @@ A simple fix could involve checking the requested index before attempting to ret
       end
 
       def check_row_index
-        raise NoRowError, "The row index is out of range" unless (-max_x..max_x).include?(pos) 
+        unless (-max_x..max_x).include?(pos) 
+          raise NoRowError, "The row index is out of range"
+        end
       end
     end
 
@@ -133,7 +135,10 @@ page_break
       end
 
       def check_column_index(pos)
-        raise NoColumnError, "The column does not exist or the index is out of  range" unless (-max_y..max_y).include?(pos)
+        unless (-max_y..max_y).include?(pos)
+          raise NoColumnError,
+                "The column does not exist or the index is out of range"
+        end
       end
    
     end
@@ -183,9 +188,13 @@ Considering all these issues with truncation/padding, we will instead raise an e
       def check_consistent_length(type, array)
         case type
         when :row
-          raise ArgumentError, "Inconsistent row length" unless array.length == rows.first.length
+          unless array.length == rows.first.length
+            raise ArgumentError, "Inconsistent row length"
+          end
         when :column
-          raise ArgumentError, "Inconsistent column length" unless array.length == @rows.length
+          unless array.length == @rows.length
+            raise ArgumentError, "Inconsistent column length"
+          end
         else
           raise ArgumentError, "Unknown type"
         end
@@ -203,6 +212,8 @@ Considering all these issues with truncation/padding, we will instead raise an e
       end  
 
     end
+
+page_break
 
 Data corruption
 ---------------
@@ -293,8 +304,13 @@ So if we dup() the seed data that's passed to our initialize method and before w
 
 The only really reliable way to create a brand new object when we assign it to another variable is marshaling. 
 
-From the Pickaxe book: *[Marshaling] is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed. [.....] 
-Saving an object and some or all of its components is done using the method Marshal.dump. Typically, you will dump an entire object tree starting with some given object. Later, you can reconstitute the object using Marshal.load.*
+<h6 title="From the Pickaxe book: Marshaling">
+Marshaling is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed.
+
+[.....]
+
+Saving an object and some or all of its components is done using the method Marshal.dump. Typically, you will dump an entire object tree starting with some given object. Later, you can reconstitute the object using Marshal.load.
+</h6>
 
     class Table
 
@@ -306,8 +322,8 @@ Saving an object and some or all of its components is done using the method Mars
       end
       
     end
- 
-Now there is no cross-reference between @simple_data and the table @rows. We can also say that the Table.new method is side effect free:
+
+We use Marshal.dump to output a string representation of the object tree referenced by data and use this string as the input for Marshal.load which reconstructs the full object tree. Now there is no cross-reference between @simple_data and the table @rows. We can also say that the Table.new method is side effect free:
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> @simple_data[2][2] = "king of the world"
