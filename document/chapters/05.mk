@@ -231,7 +231,7 @@ The root of the issue is that in Ruby variables hold references to objects, not 
     >> puts "person2 is #{person2}" 
     => person2 is Jim 
 
-So, in our case, when we initialize a new Table we are setting the @rows variable to reference the same two-dimensional array as @simple_data does. Here you can see that when we remove the first array as headers, we are also altering @simple_data:
+So, in our case, when we initialize a new Table we are setting the @rows variable to reference the same two-dimensional array as @simple\_data does. Here you can see that when we remove the first array as headers, we are also altering @simple_data:
 
     >> @simple_data = [["name",  "age", "occupation"],
                        ["Tom", 32,"engineer"], 
@@ -288,7 +288,7 @@ Produces a shallow copy of obj — the instance variables of obj are copied, but
 In general, dup duplicates just the state of an object, while clone also copies the state, any associated singleton class, and any internal ﬂags (such as whether the object is frozen). The taint status is copied by both dup and clone. 
 </h6>
 
-So if we dup() the seed data that's passed to our initialize method and before we assign it to Table#rows, the outer array that @rows points to is indeed a different object from the outer array held in @simple_data. However, Table#rows and @simple_data are still both referencing the same internal arrays, meaning the actual rows. To prove the point:
+So if we dup() the seed data that's passed to our initialize method and before we assign it to Table#rows, the outer array that @rows points to is indeed a different object from the outer array held in @simple\_data. However, Table#rows and @simple_data are still both referencing the same internal arrays, meaning the actual rows. To prove the point:
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> my_table.rows.object_id    # note that the output is run specific

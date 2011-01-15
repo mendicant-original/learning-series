@@ -90,7 +90,7 @@ As with rows, we want to be able to expand our data set by appending or insertin
       assert_equal "Brown", @simple_table[0,1]
     end
     
-The add_column() method needs to know whether headers are being used or not. As such, we store that option in a boolean variable, @header_support. Of course this is a matter of taste. We could just as easily have checked whether the @headers array is empty.
+The add\_column() method needs to know whether headers are being used or not. As such, we store that option in a boolean variable, @header_support. Of course this is a matter of taste. We could just as easily have checked whether the @headers array is empty.
     
     class Table
       attr_reader :rows, :headers, :header_support
@@ -165,7 +165,7 @@ Last but not least, we also want to filter out columns that don't meet a particu
       assert_equal ["age"], @simple_table.headers
     end
   
-Given our current, row-biased approach there is simply no easy way of doing this. We have to temporarily create each column and check it against the condition defined in the block sent to the select_columns() method. Since we expect the block to return true or false we can take that as an indication for whether we should delete or keep the column. The execution of the latter we will delegate to the existing delete_column() method.
+Given our current, row-biased approach there is simply no easy way of doing this. We have to temporarily create each column and check it against the condition defined in the block sent to the select\_columns() method. Since we expect the block to return true or false we can take that as an indication for whether we should delete or keep the column. The execution of the latter we will delegate to the existing delete_column() method.
     
     class Table
 
