@@ -14,10 +14,10 @@ To verify that the table is indeed empty, we write a test to check that the tabl
     # From now on we will omit this class declaration
     class TableTest < Test::Unit::TestCase
 
-    test "can be initialized empty" do
-      my_table = Table.new
-      assert_equal [], my_table.rows
-    end
+      test "can be initialized empty" do
+        my_table = Table.new
+        assert_equal [], my_table.rows
+      end
 
     end
 

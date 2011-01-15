@@ -40,7 +40,9 @@ A simple fix could involve checking the requested index before attempting to ret
       end
 
       def check_row_index
-        raise NoRowError, "The row index is out of range" unless (-max_x..max_x).include?(pos) 
+        unless (-max_x..max_x).include?(pos) 
+          raise NoRowError, "The row index is out of range"
+        end
       end
     end
 
@@ -133,7 +135,10 @@ page_break
       end
 
       def check_column_index(pos)
-        raise NoColumnError, "The column does not exist or the index is out of  range" unless (-max_y..max_y).include?(pos)
+        unless (-max_y..max_y).include?(pos)
+          raise NoColumnError,
+                "The column does not exist or the index is out of range"
+        end
       end
    
     end
@@ -183,9 +188,13 @@ Considering all these issues with truncation/padding, we will instead raise an e
       def check_consistent_length(type, array)
         case type
         when :row
-          raise ArgumentError, "Inconsistent row length" unless array.length == rows.first.length
+          unless array.length == rows.first.length
+            raise ArgumentError, "Inconsistent row length"
+          end
         when :column
-          raise ArgumentError, "Inconsistent column length" unless array.length == @rows.length
+          unless array.length == @rows.length
+            raise ArgumentError, "Inconsistent column length"
+          end
         else
           raise ArgumentError, "Unknown type"
         end
@@ -204,6 +213,8 @@ Considering all these issues with truncation/padding, we will instead raise an e
 
     end
 
+page_break
+
 Data corruption
 ---------------
 
@@ -220,7 +231,7 @@ The root of the issue is that in Ruby variables hold references to objects, not 
     >> puts "person2 is #{person2}" 
     => person2 is Jim 
 
-So, in our case, when we initialize a new Table we are setting the @rows variable to reference the same two-dimensional array as @simple_data does. Here you can see that when we remove the first array as headers, we are also altering @simple_data:
+So, in our case, when we initialize a new Table we are setting the @rows variable to reference the same two-dimensional array as @simple\_data does. Here you can see that when we remove the first array as headers, we are also altering @simple_data:
 
     >> @simple_data = [["name",  "age", "occupation"],
                        ["Tom", 32,"engineer"], 
@@ -277,7 +288,7 @@ Produces a shallow copy of obj — the instance variables of obj are copied, but
 In general, dup duplicates just the state of an object, while clone also copies the state, any associated singleton class, and any internal ﬂags (such as whether the object is frozen). The taint status is copied by both dup and clone. 
 </h6>
 
-So if we dup() the seed data that's passed to our initialize method and before we assign it to Table#rows, the outer array that @rows points to is indeed a different object from the outer array held in @simple_data. However, Table#rows and @simple_data are still both referencing the same internal arrays, meaning the actual rows. To prove the point:
+So if we dup() the seed data that's passed to our initialize method and before we assign it to Table#rows, the outer array that @rows points to is indeed a different object from the outer array held in @simple\_data. However, Table#rows and @simple_data are still both referencing the same internal arrays, meaning the actual rows. To prove the point:
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> my_table.rows.object_id    # note that the output is run specific
@@ -293,8 +304,13 @@ So if we dup() the seed data that's passed to our initialize method and before w
 
 The only really reliable way to create a brand new object when we assign it to another variable is marshaling. 
 
-From the Pickaxe book: *[Marshaling] is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed. [.....] 
-Saving an object and some or all of its components is done using the method Marshal.dump. Typically, you will dump an entire object tree starting with some given object. Later, you can reconstitute the object using Marshal.load.*
+<h6 title="From the Pickaxe book: Marshaling">
+Marshaling is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed.
+
+[.....]
+
+Saving an object and some or all of its components is done using the method Marshal.dump. Typically, you will dump an entire object tree starting with some given object. Later, you can reconstitute the object using Marshal.load.
+</h6>
 
     class Table
 
@@ -306,8 +322,8 @@ Saving an object and some or all of its components is done using the method Mars
       end
       
     end
- 
-Now there is no cross-reference between @simple_data and the table @rows. We can also say that the Table.new method is side effect free:
+
+We use Marshal.dump to output a string representation of the object tree referenced by data and use this string as the input for Marshal.load which reconstructs the full object tree. Now there is no cross-reference between @simple_data and the table @rows. We can also say that the Table.new method is side effect free:
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> @simple_data[2][2] = "king of the world"

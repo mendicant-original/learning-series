@@ -31,11 +31,13 @@ Now that we have seen that there is no shortcut to remapping the rows to columns
 So here then is test that demonstrates retrieving a column (both by name and index):
 
     test "can access a column by its name" do
-      assert_equal ["Tom", "Beth", "George", "Laura", "Marilyn"],   @simple_table.column("name")
+      assert_equal ["Tom", "Beth", "George", "Laura", "Marilyn"],
+                   @simple_table.column("name")
     end
     
     test "can access a column by its index" do
-      assert_equal ["Tom", "Beth", "George", "Laura", "Marilyn"],   @simple_table.column(0)
+      assert_equal ["Tom", "Beth", "George", "Laura", "Marilyn"],
+                   @simple_table.column(0)
     end
 
 To implement this we map the rows by the index of the column in question:
@@ -43,8 +45,8 @@ To implement this we map the rows by the index of the column in question:
     class Table
     
       def column_index(pos)
-          i = headers.index(pos)
-          i.nil? ? pos : i
+        i = headers.index(pos)
+        i.nil? ? pos : i
       end
   
       def column(pos)
@@ -57,7 +59,8 @@ Since we have already implemented column names and are saving a reference to the
  
     test "can rename a column" do
       @simple_table.rename_column("name", "first name")
-      assert_equal ["first name", "age", "occupation"], @simple_table.headers
+      assert_equal ["first name", "age", "occupation"],
+                   @simple_table.headers
     end
 
     
@@ -74,18 +77,20 @@ As with rows, we want to be able to expand our data set by appending or insertin
     test "can append a column" do
       to_append = ["location", "Italy", "Mexico", "USA", "Finland", "China"]
       @simple_table.add_column(to_append)
-      assert_equal ["name", "age", "occupation", "location"], @simple_table.headers
+      assert_equal ["name", "age", "occupation", "location"],
+                   @simple_table.headers
       assert_equal 4, @simple_table.rows.first.length
     end
     
     test "can insert a column at any position" do
       to_append = ["last name", "Brown", "Crimson", "Denim", "Ecru", "Fawn"]
       @simple_table.add_column(to_append, 1)
-      assert_equal ["name", "last name", "age", "occupation"], @simple_table.headers
+      assert_equal ["name", "last name", "age", "occupation"],
+                   @simple_table.headers
       assert_equal "Brown", @simple_table[0,1]
     end
     
-The add_column() method needs to know whether headers are being used or not. As such, we store that option in a boolean variable, @header_support. Of course this is a matter of taste. We could just as easily have checked whether the @headers array is empty.
+The add\_column() method needs to know whether headers are being used or not. As such, we store that option in a boolean variable, @header_support. Of course this is a matter of taste. We could just as easily have checked whether the @headers array is empty.
     
     class Table
       attr_reader :rows, :headers, :header_support
@@ -160,7 +165,7 @@ Last but not least, we also want to filter out columns that don't meet a particu
       assert_equal ["age"], @simple_table.headers
     end
   
-Given our current, row-biased approach there is simply no easy way of doing this. We have to temporarily create each column and check it against the condition defined in the block sent to the select_columns() method. Since we expect the block to return true or false we can take that as an indication for whether we should delete or keep the column. The execution of the latter we will delegate to the existing delete_column() method.
+Given our current, row-biased approach there is simply no easy way of doing this. We have to temporarily create each column and check it against the condition defined in the block sent to the select\_columns() method. Since we expect the block to return true or false we can take that as an indication for whether we should delete or keep the column. The execution of the latter we will delegate to the existing delete_column() method.
     
     class Table
 

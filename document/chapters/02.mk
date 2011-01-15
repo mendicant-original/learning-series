@@ -53,25 +53,25 @@ This is what a test for this feature could look like:
     end
 
 
-  class Table
-    attr_reader :rows, :headers
+    class Table
+      attr_reader :rows, :headers
 
-    def  initialize(data = [], options = {})
-      @headers = options[:headers] ? data.shift : []
-      @rows = data
-    end
+      def  initialize(data = [], options = {})
+        @headers = options[:headers] ? data.shift : []
+        @rows = data
+      end
 
-    def [](row, col)
-      col = column_index(col)
-      rows[row][col]
-    end
+      def [](row, col)
+        col = column_index(col)
+        rows[row][col]
+      end
 
-    def column_index(pos)
-      i = headers.index(pos)
-      i.nil? ? pos : i
-    end
+      def column_index(pos)
+        i = headers.index(pos)
+        i.nil? ? pos : i
+      end
 
-    def add_row(row)
-      @rows << row
+      def add_row(row)
+        @rows << row
+      end
     end
-  end
