@@ -68,6 +68,7 @@ class LearningMaterial < Jambalaya
         fill_color "222222"
       
         snippet = tag.children[0].inner_html.gsub("&gt;", ">").gsub("&lt;", "<")
+        snippet.gsub!("&amp;", "&")
         code(snippet, 7)
       
         fill_color previous_color
