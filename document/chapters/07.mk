@@ -3,7 +3,7 @@
 
 This chapter deals with two more alumni submissions that are interesting for different reasons.
 
-Eric G., for example, tried to optimize memory usage, which is a valid concern when dealing with large data sets. He also had a unique idea regarding data storage.
+Eric G. tried to optimize memory usage, which is a valid concern when dealing with large data sets. He also had a unique idea regarding data storage.
 
 Wojciech P. attempted to clearly separate concerns in an object oriented way. We will discuss the particulars of his solution a bit.
 
@@ -18,7 +18,7 @@ Eric's idea was to store the data as a single flattened array instead of stickin
 
 If you stop and think about the implications of using a flattened array for a moment,  you'll realize that quite a bit would have to change in the way we think about rows and columns. 
 
-A "row" is now merely a virtual sequence in the array. It can be sliced out of the main array by calculating at which index it begins and ends at - calculations which are based on the row index and length. Similarly, a column would need to be assembled based on its calculated indices throughout the main array.
+A "row" now becomes merely a virtual sequence in the array. It can be sliced out of the main array by calculating at which index it begins and ends at - calculations which are based on the row index and length. Similarly, a column would need to be assembled based on its calculated indices throughout the main array.
 
 Here are some of Eric's thoughts on this way of storing the data:
 
@@ -32,7 +32,7 @@ He also mentions a third and relatively serious concern:
 
   *The  other thing running through my mind when I started thinking about the  problem was that the memory overhead should be kept as low as possible. I know the Ruby community tends to downplay this kind of concern upfront, but I think it's legitimate here given that we are already loading an arbitrary sized file into memory. That is -- you  have n rows * m cols objects before you even talk about a Table class and whatever else you need.* 
 
-Mulling  over potential memory issues, he came up with a way to "lazily load" rows and columns. Check out his ScopedCollection class to get a better picture:
+Mulling over potential memory issues, he came up with a way to "lazily load" rows and columns. Check out his ScopedCollection class to get a better picture:
 
  *Row and Column collections are 'lazy-loaded' arrays of rows and columns. That is, you can specify a range of rows/columns and conditions, and the array isn't actually populated until you enumerate it in some way -- e.g. by calling `table.rows.map`.*
 
