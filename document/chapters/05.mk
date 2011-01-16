@@ -116,8 +116,6 @@ Here then is the code to guard against both potential sources of error:
           row.insert(i, col.shift)
         end
       end
-      
-page_break
 
       def delete_column(pos)
         pos = column_index(pos)
@@ -127,6 +125,8 @@ page_break
         end
         @rows.map {|row| row.delete_at(pos) }
       end
+      
+page_break
 
     private
 
@@ -323,7 +323,7 @@ Saving an object and some or all of its components is done using the method Mars
       
     end
 
-We use Marshal.dump to output a string representation of the object tree referenced by data and use this string as the input for Marshal.load which reconstructs the full object tree. Now there is no cross-reference between @simple_data and the table @rows. We can also say that the Table.new method is side effect free:
+We use Marshal.dump to output a string representation of the object tree referenced by "data" and then use this string as the input for Marshal.load which reconstructs the full object tree. Now there is no cross-reference between @simple_data and the table @rows. We can also say that the Table.new method is side effect free:
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> @simple_data[2][2] = "king of the world"
@@ -332,4 +332,4 @@ We use Marshal.dump to output a string representation of the object tree referen
     >> @simple_data[0]
     => ["name", "age", "occupation"]
 
-Unfortunately this method is also not without drawbacks. Apart from the time that it takes to marshall and unmarshall the seed data, we are temporarily storing two copies of the same nested array.
+Unfortunately this method is not without drawbacks. Apart from the time that it takes to marshall and unmarshall the seed data, we are temporarily storing two copies of the same nested array.
