@@ -1,0 +1,24 @@
+GIT
+  remote: git://github.com/sandal/prawn
+  revision: 05d637d073f3ddb40cfa0d901207b4b779131372
+  submodules: true
+  specs:
+    prawn (0.11.1.pre)
+      pdf-reader (>= 0.9.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    Ascii85 (1.0.0)
+    bluecloth (2.0.9)
+    nokogiri (1.4.4)
+    pdf-reader (0.9.1)
+      Ascii85 (>= 0.9)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bluecloth
+  nokogiri
+  prawn!

@@ -1,5 +1,8 @@
 # encoding: utf-8
 
+require "rubygems"
+require "bundler/setup"
+
 $LOAD_PATH.unshift File.dirname(__FILE__) + "/../vendor/jambalaya/lib"
 require "jambalaya"
 require "bluecloth"
