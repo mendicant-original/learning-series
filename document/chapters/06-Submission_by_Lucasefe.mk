@@ -11,6 +11,8 @@ The Table class has some separation built-in by sporting short, focused methods.
 
 Here, we're going to discuss a solution by Lucas Efe that manages to treat rows and columns as wholly separate objects, but without duplicating the data set. The trick is that they don't hold the actual data values, but delegate that responsibility to a Cell class. 
 
+page_break
+
 Rows, Columns and Cells
 ----------------------
 
@@ -123,8 +125,6 @@ Bricks::Index can override array methods and also implement additional methods t
 
 Note that even though we seem to be using inheritance, we don't actually "inherit" directly from Array. Rather than stating that Bricks::Index is a special form of Array, it would be more precise to say that Bricks::Index <b>is a</b> Delegator and <b>has an</b> Array.
 </h6>
-
-page_break
 
 Reading vs. Writing Operations
 ------------------------------

@@ -36,6 +36,8 @@ Mulling over potential memory issues, he came up with a way to "lazily load" row
 
 > Row and Column collections are 'lazy-loaded' arrays of rows and columns. That is, you can specify a range of rows/columns and conditions, and the array isn't actually populated until you enumerate it in some way -- e.g. by calling `table.rows.map`.
 
+page_break
+
 In retrospect, though, he voiced some doubts regarding his initial choice of storage, the flattened array.
 
 > Storing everything in a single array made things like inserting and deleting a  column quite complicated. I found myself wanting some variant of  Array#zip that inserts from one array into every nth element of another.  In the end, my col insert and delete methods end up rebuilding the entire table - not very efficient. On the other hand, having one array saves memory compared to an array of arrays, particularly for large numbers of rows.
