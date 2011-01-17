@@ -16,9 +16,9 @@ Rows, Columns and Cells
 
 How exactly is this behavior accomplished? In the words of Lucas Efe:
 
-*The object Bricks::Table stores two Bricks::Index objects. One for vertical access and one for horizontal, so you can access the data by column or row. For each cell that gets added to the table, an Bricks::Cell object is created. This Cell is also added to both indexes, so when you retrieve data by column or row, you always get what you want.* 
+> The object Bricks::Table stores two Bricks::Index objects. One for vertical access and one for horizontal, so you can access the data by column or row. For each cell that gets added to the table, an Bricks::Cell object is created. This Cell is also added to both indexes, so when you retrieve data by column or row, you always get what you want.
 
-*Since the cells are created and then added to the index, there is no data duplication. If you modify a table cell, say like the following example, you are only modifying one object, the cell itself, but not the indexes.*
+> Since the cells are created and then added to the index, there is no data duplication. If you modify a table cell, say like the following example, you are only modifying one object, the cell itself, but not the indexes.
 
 View below the initialize method of the Bricks::Table object: 
 

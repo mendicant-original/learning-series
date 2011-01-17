@@ -79,6 +79,32 @@ class LearningMaterial < Jambalaya
     end
   end
   
+  def blockquote_to_prawn(tag)
+    group do
+      font("serif", :size => 9) do
+        move_down 0.05.in
+        
+        formatted_text_box([:text => "“", :color => "888888"],
+                           :at => [0, cursor + 4],
+                           :size => 40)
+      
+        indent(0.4.in) do
+          tag.children.each do |p|
+          
+            text(p.inner_html.gsub(/\s+/," "),
+                 :align         => :justify,
+                 :inline_format => true,
+                 :leading       => 2,
+                 :style         => :italic)
+            move_down 0.05.in
+          end
+        end
+        move_down 0.1.in
+        
+      end
+    end
+  end
+  
   def ul_to_prawn(tag, pad = 0)
     font("serif", :size => 9) do
       tag.children.each do |li|
