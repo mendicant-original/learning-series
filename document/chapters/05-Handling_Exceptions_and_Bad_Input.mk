@@ -249,12 +249,6 @@ So, in our case, when we initialize a new Table we are setting the @rows variabl
       
 Here is another example of how altering the seed data will be reflected when we access the data through the Table instance:
 
-    >> @simple_data = [["name",  "age", "occupation"],
-                       ["Tom", 32,"engineer"], 
-                       ["Beth", 12,"student"], 
-                       ["George", 45,"photographer"],
-                       ["Laura", 23, "aviator"],
-                       ["Marilyn", 84, "retiree"]]
     >> my_table = Table.new(@simple_data, :headers => true)
     >> @simple_data[2][2] = "king of the world"
     >> my_table[2, 2]
@@ -303,6 +297,8 @@ So if we dup() the seed data that's passed to our initialize method and before w
 
 
 The only really reliable way to create a brand new object when we assign it to another variable is marshaling. 
+
+page_break
 
 <h6 title="From the Pickaxe book: Marshaling">
 Marshaling is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed.
