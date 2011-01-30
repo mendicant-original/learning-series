@@ -50,9 +50,13 @@ class LearningMaterial < Jambalaya
   # This renders the aside
   # Yes, I'm cheating
   def h6_to_prawn(tag)
+    move_down 0.05.in
+    
     aside(tag["title"]) do
       prose tag.inner_html
     end
+    
+    move_down 0.15.in
   end
   
   def p_to_prawn(tag)
@@ -76,6 +80,7 @@ class LearningMaterial < Jambalaya
       
         fill_color previous_color
       end
+      move_down 0.05.in
     end
   end
   
