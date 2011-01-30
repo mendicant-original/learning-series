@@ -246,8 +246,25 @@ So, in our case, when we initialize a new Table we are setting the @rows variabl
         ["George", 45,"photographer"],
         ["Laura", 23, "aviator"],
         ["Marilyn", 84, "retiree"]]
-      
-Here is another example of how altering the seed data will be reflected when we access the data through the Table instance:
+
+We can change the initialize method in order to avoid damaging the data provided by the user:
+
+    class Table
+
+      def initialize(data = [], options = {})
+        # code omited
+        if options[:headers]
+          @headers = data[0]
+          @rows    = data[1..-1]
+        else
+          @headers = []
+          @rows    = data
+        end
+      end
+  
+    end
+
+While this approach doesn't change the provided data, data corruption can still happen. Here is another example of how altering the seed data will be reflected when we access the data through the Table instance:
 
     >> my_table = Table.new(@simple_data, :headers => true)
     >> @simple_data[2][2] = "king of the world"
@@ -274,6 +291,8 @@ Simple, isn't it? Except that this doesn't solve our problem. The behavior from 
 
 Let's examine the dup() method a little closer:
 
+page_break
+
 <h6 title="From the Pickaxe book: dup()">
 dup()
 
@@ -297,8 +316,6 @@ So if we dup() the seed data that's passed to our initialize method and before w
 
 
 The only really reliable way to create a brand new object when we assign it to another variable is marshaling. 
-
-page_break
 
 <h6 title="From the Pickaxe book: Marshaling">
 Marshaling is the ability to serialize objects, letting you store them somewhere and reconstitute them when needed.
