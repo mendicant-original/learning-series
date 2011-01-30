@@ -117,7 +117,7 @@ To better understand how the Bricks::Index class is constructed, consider the fo
 The most obvious feature is the use of DelegateClass(Array). Simply speaking, this lets Bricks::Index instances delegate methods not defined by the class itself to an internal array object. For a detailed explanation on how this works, see the following aside.
 
 
-<h6 title="The DelegatorClass">
+<h6 title="The DelegateClass method">
 Under the hood DelegateClass is a method call and just like the class keyword returns a class object.
 
 The class returned by DelegateClass(Array) knows to delegate all methods defined by Array to an internal array object that should be defined in the initialize method. This object is created in the constructor of Bricks::Index and passed to the superclass via super(Array.new).
