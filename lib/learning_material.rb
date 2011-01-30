@@ -10,6 +10,23 @@ require "nokogiri"
 
 class LearningMaterial < Jambalaya
   
+  def setup_page_numbering
+    repeat(:all, :dynamic => true) do
+      stroke_line [bounds.left, bounds.bottom  - 0.2.in],
+                  [bounds.right, bounds.bottom - 0.2.in]
+
+      pn_width = width_of(page_number.to_s, :size => 6)
+
+      if page_number > 1
+        font("serif") do
+          draw_text (page_number-1).to_s, :size => 6,
+            :at => [bounds.right - pn_width, bounds.bottom - 0.4.in],
+            :style => :bold
+        end
+      end
+    end
+  end
+  
   def load_chapter(filename)
     mk = BlueCloth.new(File.read(filename))
     tags = Nokogiri::HTML(mk.to_html)
