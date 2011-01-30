@@ -27,6 +27,41 @@ class LearningMaterial < Jambalaya
     end
   end
   
+  def cover(issue, authors)
+    font_families["cover"] = {
+      :normal => "#{File.dirname(__FILE__)}/../assets/thryn___.ttf"
+    }
+
+    move_down 100
+
+    font("cover") do
+      formatted_text([ {:text => "RMU",
+                        :color => "70120B",
+                        :size => 48}
+                     ])
+
+      move_up 20
+      formatted_text([ {:text => "Learning Series",
+                        :color => "70120B",
+                        :size => 56}
+                     ])
+
+      move_down 20
+      font_size(30) do
+        text issue, :align => :right
+      end
+
+      move_cursor_to 30
+      font_size(15) do
+        text authors, :align => :right
+      end
+    end
+
+    image "#{File.dirname(__FILE__)}/../assets/rmu_logo.png",
+          :scale => 0.3,
+          :at => [0, 30]
+  end
+  
   def load_chapter(filename)
     mk = BlueCloth.new(File.read(filename))
     tags = Nokogiri::HTML(mk.to_html)
