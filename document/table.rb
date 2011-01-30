@@ -11,10 +11,6 @@ LearningMaterial.generate("table.pdf") do
                                                "chapters"))
 
   text "Cover", :size => 50
-  
-  outline.define do
-    section DOC_TITLE, :destination => page_number
-  end
 
   Dir.chdir(chapters_folder) do
     Dir.glob("*") do |chapter|
@@ -25,8 +21,8 @@ LearningMaterial.generate("table.pdf") do
       title.gsub!('.mk', ' ').gsub!('_', ' ')
       title = "Chapter #{number.to_i}: #{title}" if number > 0
       
-      outline.add_subsection_to(DOC_TITLE) do
-        outline.section(title, :destination => page_number)
+      outline.define do
+        section(title, :destination => page_number)
       end
       
       load_chapter(File.join(chapters_folder, chapter))
