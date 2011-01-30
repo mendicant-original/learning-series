@@ -22,7 +22,7 @@ At a minimum, the API of the table structure needed to implement the following f
 
 As the end product is likely to be fairly complex, it is easy to get overwhelmed if we tried to implement all the features at once. If you read through the full list of requirements you can see that they become progressively more complex. This type of problem lends itself particularly well to a Test Driven Development (TDD) approach, since you can effectively check off one requirement at a time. You can start with the first one, design a test and then write the code to make it pass. Then repeat the same procedure for the next requirement, and so on.
 
-The first four chapters walk through this TDD approach and, as we shall see, the resulting solution is somewhat similar to that submitted by the majority of students in this session. In the later chapters we will discuss some more unique approaches that make a deliberate attempt to incorporate a variety of Ruby best practices.
+The first four chapters walk through this TDD approach and, as we shall see, the resulting solution is somewhat similar to that submitted by the majority of students in this session. In the later chapters we will discuss some of the pitfalls of this simplistic approach like data corruption, bad input and problems with column names, as well as some more unique approaches that make a deliberate attempt to incorporate a variety of Ruby best practices.
 
 Test Environment
 ----------------
