@@ -1,24 +1,27 @@
 06 Submission by Lucas Efe
 ======================
 
-Although it works and has a fairly clean API, the solution presented above is by no means perfect. We have already mentioned the somewhat awkward access to columns. Another, just as serious problem is that all the code for the entire table lives in a single class, which is a code smell that indicates a violation of the Separation of Concerns principle.
+Although it works and has a fairly clean API, the solution presented above is by no means perfect. We have already mentioned the somewhat awkward access to columns. Another, just as serious problem is that all the code for the entire table lives in a single class, which is a code smell that indicates a violation of the Single Responsibility Principle.
 
-<h6 title="Separation of Concerns">
-Generally speaking a "concern" is some idea about what a piece of software has to do and different concerns should be handled by different parts of the software. The ideal is always to organize code into small, tightly focused sections, which makes any program both more readable and easier to maintain.
+<h6 title="Single Responsibility Principle">
+
+Generally speaking a "concern" is some idea about what a piece of software has to do. Different concerns should be handled by different parts of the software. When dealing with object oriented design each class should cover its own concern thus having a single responsibility. By organizing the code in small, tightly focused sections, we make it both more readable and easier to maintain.
 </h6>
 
 The Table class has some separation built-in by sporting short, focused methods. While this is a first step in the right direction, there should be other ways to break out functionality into separate, non-overlapping classes. This is however not as easy as it seems. Obvious attempts might include separating classes for rows and columns, but this will prove difficult because of the tight coupling between them. The coupling in question derives from the fact that they are essentially just different perspectives on the same data set. 
 
 Here, we're going to discuss a solution by Lucas Efe that manages to treat rows and columns as wholly separate objects, but without duplicating the data set. The trick is that they don't hold the actual data values, but delegate that responsibility to a Cell class. 
 
+page_break
+
 Rows, Columns and Cells
 ----------------------
 
 How exactly is this behavior accomplished? In the words of Lucas Efe:
 
-*The object Bricks::Table stores two Bricks::Index objects. One for vertical access and one for horizontal, so you can access the data by column or row. For each cell that gets added to the table, an Bricks::Cell object is created. This Cell is also added to both indexes, so when you retrieve data by column or row, you always get what you want.* 
+> The object Bricks::Table stores two Bricks::Index objects. One for vertical access and one for horizontal, so you can access the data by column or row. For each cell that gets added to the table, an Bricks::Cell object is created. This Cell is also added to both indexes, so when you retrieve data by column or row, you always get what you want.
 
-*Since the cells are created and then added to the index, there is no data duplication. If you modify a table cell, say like the following example, you are only modifying one object, the cell itself, but not the indexes.*
+> Since the cells are created and then added to the index, there is no data duplication. If you modify a table cell, say like the following example, you are only modifying one object, the cell itself, but not the indexes.
 
 View below the initialize method of the Bricks::Table object: 
 
@@ -114,7 +117,7 @@ To better understand how the Bricks::Index class is constructed, consider the fo
 The most obvious feature is the use of DelegateClass(Array). Simply speaking, this lets Bricks::Index instances delegate methods not defined by the class itself to an internal array object. For a detailed explanation on how this works, see the following aside.
 
 
-<h6 title="The DelegatorClass">
+<h6 title="The DelegateClass method">
 Under the hood DelegateClass is a method call and just like the class keyword returns a class object.
 
 The class returned by DelegateClass(Array) knows to delegate all methods defined by Array to an internal array object that should be defined in the initialize method. This object is created in the constructor of Bricks::Index and passed to the superclass via super(Array.new).
@@ -123,8 +126,6 @@ Bricks::Index can override array methods and also implement additional methods t
 
 Note that even though we seem to be using inheritance, we don't actually "inherit" directly from Array. Rather than stating that Bricks::Index is a special form of Array, it would be more precise to say that Bricks::Index <b>is a</b> Delegator and <b>has an</b> Array.
 </h6>
-
-page_break
 
 Reading vs. Writing Operations
 ------------------------------

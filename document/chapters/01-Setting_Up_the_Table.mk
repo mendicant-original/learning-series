@@ -120,3 +120,5 @@ To remedy this, we could extract the first row and assign it to a separate varia
 Here have reached a first milestone of sorts. We are able to initialize a Table with or without data and add rows to it manually. We have also laid the foundation to support named columns.
 
 As you can see, taking a test driven approach allows us to do two things: focusing on small tasks and making sure that the code written is behaving as it should. Following TDD principles also enables us to write code that progressively takes us in the right direction without having to worry about the full set of requirements at the outset.
+
+Although a good start this implementation has some undesired consequences. It corrupts the provided data and may fold to bad input. Rather than cover those issues now we'll keep building on the requirements and tackle all pitfalls on chapter 5.

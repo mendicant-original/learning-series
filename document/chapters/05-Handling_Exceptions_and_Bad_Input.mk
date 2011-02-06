@@ -107,11 +107,13 @@ Here then is the code to guard against both potential sources of error:
 
       def add_column(col, pos=nil)
         i = pos.nil? ? rows.first.length : pos
+        
         if header_support
           header_name = col.shift
           check_header_names(header_name)
           headers[header_name]  = i
         end
+        
         @rows.each do |row|
           row.insert(i, col.shift)
         end
@@ -119,10 +121,12 @@ Here then is the code to guard against both potential sources of error:
 
       def delete_column(pos)
         pos = column_index(pos)
+        
         if header_support
           header_name = @headers.key(pos)
           @headers.delete(header_name)
         end
+        
         @rows.map {|row| row.delete_at(pos) }
       end
       
@@ -159,14 +163,17 @@ Considering all these issues with truncation/padding, we will instead raise an e
     class Table
 
       def initialize(data = [], options = {})
-        @header_support = options[:headers]
         check_seed_data_row_length(data)
+        
+        @header_support = options[:headers]
         set_headers(data.shift) if @header_support
+        
         @rows = data
       end
 
       def add_row(new_row, pos=nil)
         check_consistent_length(:row, new_row)
+        
         i = pos.nil? ? rows.length : pos
         rows.insert(i, new_row)
       end
@@ -174,11 +181,14 @@ Considering all these issues with truncation/padding, we will instead raise an e
    
       def add_column(col, pos=nil)
         check_consistent_length(:column, col)
+        
         i = pos.nil? ? rows.first.length : pos
+        
         if header_support
           headers.insert(i, col.shift)
         end
-          @rows.each do |row|
+        
+        @rows.each do |row|
           row.insert(i, col.shift)
         end
       end
@@ -246,15 +256,26 @@ So, in our case, when we initialize a new Table we are setting the @rows variabl
         ["George", 45,"photographer"],
         ["Laura", 23, "aviator"],
         ["Marilyn", 84, "retiree"]]
-      
-Here is another example of how altering the seed data will be reflected when we access the data through the Table instance:
 
-    >> @simple_data = [["name",  "age", "occupation"],
-                       ["Tom", 32,"engineer"], 
-                       ["Beth", 12,"student"], 
-                       ["George", 45,"photographer"],
-                       ["Laura", 23, "aviator"],
-                       ["Marilyn", 84, "retiree"]]
+We can change the initialize method in order to avoid damaging the data provided by the user:
+
+    class Table
+
+      def initialize(data = [], options = {})
+        # code omited
+        if options[:headers]
+          @headers = data[0]
+          @rows    = data[1..-1]
+        else
+          @headers = []
+          @rows    = data
+        end
+      end
+  
+    end
+
+While this approach doesn't change the provided data, data corruption can still happen. Here is another example of how altering the seed data will be reflected when we access the data through the Table instance:
+
     >> my_table = Table.new(@simple_data, :headers => true)
     >> @simple_data[2][2] = "king of the world"
     >> my_table[2, 2]
@@ -279,6 +300,8 @@ Simple, isn't it? Except that this doesn't solve our problem. The behavior from 
     => "king of the world"
 
 Let's examine the dup() method a little closer:
+
+page_break
 
 <h6 title="From the Pickaxe book: dup()">
 dup()

@@ -22,27 +22,29 @@ A "row" now becomes merely a virtual sequence in the array. It can be sliced out
 
 Here are some of Eric's thoughts on this way of storing the data:
 
-  *The path I took was initially motivated by two related issues of encapsulation.  First of all, you're going to be doing operations on  both rows and columns which have some state in common with each other and with the table as a whole.  If rows and columns are basically arrays, you immediately run into the problem that state can't really be shared between them.  If you slice columns out of rows, how are you going to be able to "Run a transformation on a column which changes its content based on the return value of a block"? You'd be changing the  sliced array elements but not the row array elements.* 
+> The path I took was initially motivated by two related issues of encapsulation.  First of all, you're going to be doing operations on  both rows and columns which have some state in common with each other and with the table as a whole.  If rows and columns are basically arrays, you immediately run into the problem that state can't really be shared between them.  If you slice columns out of rows, how are you going to be able to "Run a transformation on a column which changes its content based on the return value of a block"? You'd be changing the  sliced array elements but not the row array elements.
   
 Of course this could be addressed by making the appropriate updates in the other storage option - something we have seen in the two previous solutions -, but Eric was opposed to what he called "*a lot of messy double changes*". He continues:
 
-  *That was one problem. The second issue was that even as it looked like you  need row, column, and column header arrays (or enumerables of some kind) to manipulate, you don't want to actually expose these as arrays with direct access to table data, because then you could easily corrupt the table.*
+> That was one problem. The second issue was that even as it looked like you  need row, column, and column header arrays (or enumerables of some kind) to manipulate, you don't want to actually expose these as arrays with direct access to table data, because then you could easily corrupt the table.
   
 He also mentions a third and relatively serious concern:
 
-  *The  other thing running through my mind when I started thinking about the  problem was that the memory overhead should be kept as low as possible. I know the Ruby community tends to downplay this kind of concern upfront, but I think it's legitimate here given that we are already loading an arbitrary sized file into memory. That is -- you  have n rows * m cols objects before you even talk about a Table class and whatever else you need.* 
+> The  other thing running through my mind when I started thinking about the  problem was that the memory overhead should be kept as low as possible. I know the Ruby community tends to downplay this kind of concern upfront, but I think it's legitimate here given that we are already loading an arbitrary sized file into memory. That is -- you  have n rows * m cols objects before you even talk about a Table class and whatever else you need.
 
 Mulling over potential memory issues, he came up with a way to "lazily load" rows and columns. Check out his ScopedCollection class to get a better picture:
 
- *Row and Column collections are 'lazy-loaded' arrays of rows and columns. That is, you can specify a range of rows/columns and conditions, and the array isn't actually populated until you enumerate it in some way -- e.g. by calling `table.rows.map`.*
+> Row and Column collections are 'lazy-loaded' arrays of rows and columns. That is, you can specify a range of rows/columns and conditions, and the array isn't actually populated until you enumerate it in some way -- e.g. by calling table.rows.map.
+
+page_break
 
 In retrospect, though, he voiced some doubts regarding his initial choice of storage, the flattened array.
 
-  *Storing everything in a single array made things like inserting and deleting a  column quite complicated. I found myself wanting some variant of  Array#zip that inserts from one array into every nth element of another.  In the end, my col insert and delete methods end up rebuilding the entire table - not very efficient. On the other hand, having one array saves memory compared to an array of arrays,   particularly for large numbers of rows.*
+> Storing everything in a single array made things like inserting and deleting a  column quite complicated. I found myself wanting some variant of  Array#zip that inserts from one array into every nth element of another.  In the end, my col insert and delete methods end up rebuilding the entire table - not very efficient. On the other hand, having one array saves memory compared to an array of arrays, particularly for large numbers of rows.
 
 This is how he would change things for future incarnations of the Table class:
 
-  *It would be relatively easy to change to storing the data as an array of  arrays.  I would just have to re-implement the row/cell access and manipulation methods in Table -- there would be no changes needed to Row and Column and Cell classes. And the problem of sharing references  between row and column arrays would not come up,  since cells would  always access the same underlying element, whether they belong to a column or to a row.*
+> It would be relatively easy to change to storing the data as an array of  arrays. I would just have to re-implement the row/cell access and manipulation methods in Table -- there would be no changes needed to Row and Column and Cell classes. And the problem of sharing references  between row and column arrays would not come up, since cells would always access the same underlying element, whether they belong to a column or to a row.
 
 Wojciech Piekutowski's (W.P.) submission
 ----------------------------------------
@@ -157,7 +159,7 @@ The solutions both iterate through the row data in order to yield the element at
 
 Wojciech describes how he developed this API:
 
-*I was experimenting with an ideal API - I wanted it to read easily and be well suited for this kind of table operations. That gave me a good understanding on what I want to achieve and some initial ideas about implementation details. It was also a top-level guide about what I should test during the development. Next step was writing some initial specs and initial code. After that I followed red-green-refactor route. I had my general architecture done at the beginning, but as the project went on I did some changes - for example how different parts of the code should communicate or what data really needs to be shared.*
+> I was experimenting with an ideal API - I wanted it to read easily and be well suited for this kind of table operations. That gave me a good understanding on what I want to achieve and some initial ideas about implementation details. It was also a top-level guide about what I should test during the development. Next step was writing some initial specs and initial code. After that I followed red-green-refactor route. I had my general architecture done at the beginning, but as the project went on I did some changes - for example how different parts of the code should communicate or what data really needs to be shared.
 
 A noteworthy feature of the code is including the Enumerable module in the proxy objects. By overriding the each() method in the classes that include Enumerable, we essentially (re)define what we consider to be the unit that we would like to be handled by iterator methods. This is an incredibly powerful feature, since many other methods, that rely on the particular implementation of each() in the background (e.g. select(), map() and inject()), will automatically work as expected.
 
