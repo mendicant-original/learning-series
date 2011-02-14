@@ -1,11 +1,16 @@
-= Proof of concept learning material
+= RMU Learning Series
+
+The Ruby Mendicant University (RMU) takes a problem-driven approach to teaching Ruby. During the core course students are given a set of assignments to solve. These assignments are posted publicly once the course is completed.
+
+This Series examines actual solutions submitted by alumni to a particular problem. The purpose is to give an overview of the types of solutions presented and the reasoning that went into producing them.
 
 == Usage
 
-First initialize the git submodules:
+First initialize the bundled gems:
 
-    git submodule update --init --recursive
+    bundle install
     
-Then run
+To generate the first issue:
 
-    ruby document/table.rb
+    ruby issues/01-The-Table-Assignment/table.rb
+
