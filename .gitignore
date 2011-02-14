@@ -1,1 +1,2 @@
-table.pdf
+# Ignore all generated pdfs
+*.pdf
