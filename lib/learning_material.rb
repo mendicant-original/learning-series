@@ -57,14 +57,15 @@ class LearningMaterial < Jambalaya
       end
     end
 
-    image "#{File.dirname(__FILE__)}/../assets/rmu_logo.png",
+    image("#{File.dirname(__FILE__)}/../assets/rmu_logo.png",
           :scale => 0.3,
-          :at => [0, 30]
+          :at => [0, 30])
   end
   
   def load_chapter(filename)
-    mk = BlueCloth.new(File.read(filename))
+    mk   = BlueCloth.new(File.read(filename))
     tags = Nokogiri::HTML(mk.to_html)
+    
     process_tags tags.search("body").children
   end
   
@@ -83,9 +84,11 @@ class LearningMaterial < Jambalaya
   def h1_to_prawn(tag)
     chapter_number = nil
     str = tag.inner_html
+    
     if str =~ /^\d+/
       chapter_number = "CHAPTER #{str.slice!(/^\d+/).to_i}"
     end
+    
     title chapter_number, str.strip
   end
   
@@ -113,7 +116,7 @@ class LearningMaterial < Jambalaya
   
   def p_to_prawn(tag)
     if tag.inner_html =~ /page_break/
-      break_page
+      start_new_page
     else
       prose tag.inner_html
     end
@@ -124,13 +127,16 @@ class LearningMaterial < Jambalaya
     group do
       indent(0.2.in) do
         previous_color = fill_color
-        fill_color "222222"
+        fill_color("222222")
       
-        snippet = tag.children[0].inner_html.gsub("&gt;", ">").gsub("&lt;", "<")
+        snippet = tag.children[0].inner_html
+        snippet.gsub!("&gt;", ">")
+        snippet.gsub!("&lt;", "<")
         snippet.gsub!("&amp;", "&")
+        
         code(snippet, 7)
       
-        fill_color previous_color
+        fill_color(previous_color)
       end
       move_down 0.05.in
     end
@@ -153,11 +159,12 @@ class LearningMaterial < Jambalaya
                  :inline_format => true,
                  :leading       => 2,
                  :style         => :italic)
+            
             move_down 0.05.in
           end
         end
-        move_down 0.1.in
         
+        move_down 0.1.in
       end
     end
   end
@@ -169,7 +176,6 @@ class LearningMaterial < Jambalaya
           
           if li.children.size == 1
             list_item(li.inner_html, pad)
-            
           else
             li.children.each do |child|
               if child.name == "ul"
@@ -197,10 +203,6 @@ class LearningMaterial < Jambalaya
       end
     end
     move_down 0.05.in
-  end
-  
-  def break_page
-    start_new_page
   end
   
 end
