@@ -1,4 +1,5 @@
-The most intuitive way to represent a table in Ruby is by a two dimensional array - where an individual row is an array and the collection of rows is also an array. 
+
+The most intuitive way to represent a table in Ruby is using a two dimensional array - where an individual row is an array and the collection of rows is also an array. 
 
 In keeping with TDD practices, we'll begin with the simplest possible scenario, namely by initializing an empty table object. 
 
@@ -12,8 +13,8 @@ To verify that the table is indeed empty, we write a test to check that the tabl
     class TableTest < Test::Unit::TestCase
 
       test "can be initialized empty" do
-        my_table = Table.new
-        assert_equal [], my_table.rows
+        table = Table.new
+        assert_equal [], table.rows
       end
 
     end
@@ -29,9 +30,9 @@ Making this test pass is as trivial as setting up a Table class with a single in
 Next, we need the ability to add rows to the empty table. Let's write a test for that: 
 
     test "row can be appended after empty initialization" do
-      my_table = Table.new
-      my_table.add_row([1,2,3])
-      assert_equal [[1,2,3]], my_table.rows
+      table = Table.new
+      table.add_row([1,2,3])
+      assert_equal [[1,2,3]], table.rows
     end
 
 To satisfy this requirement, the rows() method can no longer simply return an empty array. Ideally, we want to make this new test pass without causing the first one to fail. This is the most straightforward code that would make both tests pass:
@@ -50,22 +51,22 @@ To satisfy this requirement, the rows() method can no longer simply return an em
 
 Populating the table row by row can quickly become cumbersome. It would be preferable to have the option to initialize the table with data. To accomplish this, we would need to pass a two-dimensional array to the initializer method of the Table class.
 
-In order to have access to the seed data in all our tests, we'll stick some initial data in a setup block:
+We need some sample data to work with while testing. In order to have it available to all of our tests, we'll stick it in a setup block:
 
     setup do
-      @simple_data = [["name",  "age", "occupation"], 
-                      ["Tom", 32,"engineer"], 
-                      ["Beth", 12,"student"], 
-                      ["George", 45,"photographer"],
-                      ["Laura", 23, "aviator"],
-                      ["Marilyn", 84, "retiree"]]
+      @data = [["name",   "age", "occupation"  ],
+               ["Tom",     32,   "engineer"    ],
+               ["Beth",    12,   "student"     ],
+               ["George",  45,   "photographer"],
+               ["Laura",   23,   "aviator"     ],
+               ["Marilyn", 84,   "retiree"     ]]
     end
 
 Next we need to hook up our Table class in such a way that it can accept a two dimensional array as an argument upon initialization.
 
     test "can be initialized with a two-dimensional array" do
-      my_table = Table.new(@simple_data)
-      assert_equal @simple_data, my_table.rows
+      table = Table.new(@data)
+      assert_equal @data, table.rows
     end
 
 
@@ -83,17 +84,17 @@ Next we need to hook up our Table class in such a way that it can accept a two d
 
 Another common feature of tables is to have named columns. In a two-dimensional array the column names could be represented by the first nested array with the following arrays being the actual data rows. 
 
-As things exist now, the first row of @simple_data represents the column names. Thus, if we try to access the first row, the column names are returned instead:
+As things exist now, the first row of @data represents the column names. Thus, if we try to access the first row, the column names are returned instead:
 
-    >> my_table = Table.new(@simple_data)
-    >> my_table.rows[0]
-    => ["name",  "age",  "occupation"]
+    >> table = Table.new(@data)
+    >> table.rows[0]
+    => ["name", "age", "occupation"]
 
 To remedy this, we could extract the first row and assign it to a separate variable, as follows:
 
     test "first row represents column names" do
-      my_table = Table.new(@simple_data)
-      assert_equal ["name", "age", "occupation"], my_table.headers
+      table = Table.new(@data)
+      assert_equal ["name", "age", "occupation"], table.headers
     end
 
 
@@ -116,6 +117,6 @@ To remedy this, we could extract the first row and assign it to a separate varia
 
 Here have reached a first milestone of sorts. We are able to initialize a Table with or without data and add rows to it manually. We have also laid the foundation to support named columns.
 
-As you can see, taking a test driven approach allows us to do two things: focusing on small tasks and making sure that the code written is behaving as it should. Following TDD principles also enables us to write code that progressively takes us in the right direction without having to worry about the full set of requirements at the outset.
+As you can see, taking a test driven approach allows us to focus on small tasks making sure that the code is behaving as it should. Following TDD principles also enables us to write code that progressively takes us in the right direction without having to worry about the full set of requirements at the outset.
 
-Although a good start this implementation has some undesired consequences. It corrupts the provided data and may fold to bad input. Rather than cover those issues now we'll keep building on the requirements and tackle all pitfalls on chapter 5.
+Although it's a good start this implementation has some undesired consequences. It corrupts the provided data and may fold to bad input. Rather than cover those issues now we'll keep building on the requirements and tackle all pitfalls on chapter 5.

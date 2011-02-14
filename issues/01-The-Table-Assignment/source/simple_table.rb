@@ -50,7 +50,7 @@ class Table
 
   def column(pos)
     i = column_index(pos)
-    @rows.map {|row| row[i] }
+    @rows.map { |row| row[i] }
   end
 
   def rename_column(old_name, new_name)
@@ -73,7 +73,7 @@ class Table
     if header_support
       @headers.delete_at(pos)
     end
-    @rows.map {|row| row.delete_at(pos) }
+    @rows.map { |row| row.delete_at(pos) }
   end
 
   def transform_columns(pos, &block)
@@ -86,7 +86,7 @@ class Table
   def select_columns
     selected = []
     (0..(max_y - 1)).each do |i|
-      col = @rows.map {|row| row[i] }
+      col = @rows.map { |row| row[i] }
       delete_column(i) unless yield col
     end
   end

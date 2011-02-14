@@ -1,31 +1,32 @@
+
 The way things stand now, the Table class is siphoning off our first row as the column headers no matter what:
 
-    >> my _table = Table.new [[1, 2, 3], [4,5,6]]
-    >> my_table.rows[0]
+    >> table = Table.new [[1, 2, 3], [4,5,6]]
+    >> table.rows[0]
     => [4,5,6]
 
-    >> my_table.headers
+    >> table.headers
     => [1,2,3]
 
 While we want to allow for column names to be set, that feature should be optional. We need to make that feature configurable. In this case we need to edit a previous test:
 
     test "can be initialized with a two-dimensional array" do
-      my_table = Table.new(@simple_data)
-      assert_equal @simple_data, my_table.rows
-      assert_equal [], my_table.headers
+      table = Table.new(@data)
+      assert_equal @data, table.rows
+      assert_equal [],    table.headers
     end
 
     test "first row considered column names, if indicated" do
-      my_table =  Table.new(@simple_data, :headers => true)
-      assert_equal @simple_data[1..-1], my_table.rows
-      assert_equal @simple_data[0], my_table.headers
+      table = Table.new(@data.dup, :headers => true)
+      assert_equal @data[1..-1], table.rows
+      assert_equal @data[0],     table.headers
     end
 
 
     class Table
       attr_reader :rows, :headers
 
-      def  initialize(data = [], options = {})
+      def initialize(data = [], options = {})
         @headers = options[:headers] ? data.shift : []
         @rows = data
       end
@@ -35,25 +36,25 @@ While we want to allow for column names to be set, that feature should be option
       end
     end
 
-Optimally, we would like the API to be able to access the columns either by name or by index, so that we can for instance retrieve the data by asking for "the 'name' field in the third row" or "the first column in the third row".
+Optimally, we would like the API to be able to access the columns either by name or by index, so that we can for instance retrieve the data by asking for "the 'name' field in the second row" or "the first column in the second row".
 
-This is what a test for this feature could look like:
+This is what the tests and implementation for this feature could look like:
 
     test "cell can be referred to by column name and row index" do
-      my_table = Table.new(@simple_data, :headers => true)
-      assert_equal "Beth", my_table[1,"name"]
+      table = Table.new(@data, :headers => true)
+      assert_equal "Beth", table[1, "name"]
     end
 
     test "cell can be referred to by column index and row index" do
-      my_table = Table.new(@simple_data, :headers => true)
-      assert_equal "Beth", my_table[1, 0]
+      table = Table.new(@data, :headers => true)
+      assert_equal "Beth", table[1, 0]
     end
 
 
     class Table
       attr_reader :rows, :headers
 
-      def  initialize(data = [], options = {})
+      def initialize(data = [], options = {})
         @headers = options[:headers] ? data.shift : []
         @rows = data
       end
@@ -72,3 +73,5 @@ This is what a test for this feature could look like:
         @rows << row
       end
     end
+
+We've covered the simple requirements by now as we're able to properly initialize a table and to access individual cells. In the next chapter we start to implement some of the tricky ones.
