@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-require_relative "../lib/learning_material"
+require_relative "../../lib/learning_series"
 
-LearningMaterial.generate("table.pdf") do
+LearningSeries.generate("table.pdf") do
   
   cover("#1 The Table assignment", "Andrea Singh and Felipe Doria")
 
@@ -13,9 +13,12 @@ LearningMaterial.generate("table.pdf") do
     Dir.glob("*") do |chapter|
       start_new_page
       
-      number, title = chapter.split('-')
-      number = number.to_i
-      title.gsub!('.mk', ' ').gsub!('_', ' ')
+      title  = chapter.dup
+      number = title.slice!(/\d+/).to_i
+      
+      title.gsub!('.mk', ' ')
+      title.gsub!('-', ' ')
+      
       title = "Chapter #{number.to_i}: #{title}" if number > 0
       
       outline.define do

@@ -8,7 +8,7 @@ require "jambalaya"
 require "bluecloth"
 require "nokogiri"
 
-class LearningMaterial < Jambalaya
+class LearningSeries < Jambalaya
   
   def setup_page_numbering
     repeat(:all, :dynamic => true) do
