@@ -1,6 +1,3 @@
-03 Row Manipulations
-====================
-
 We have already set up a method to retrieve the collection of rows. We can also append a new row at the end (see the add_row() method in Chapter One). But what if we want to insert a new row in a particular position and not at the end? 
 
     context "row manipulations" do

@@ -1,6 +1,3 @@
-Introduction
-============
-
 The Ruby Mendicant University (RMU) takes a problem-driven approach to teaching Ruby. During the core course students are given a set of assignments, which they solve mostly on their own, but also in consultation with their peers and feedback from Gregory Brown, the founder of RMU.
 
 Once the course is completed the assignments are posted publicly and can be used as learning material for self study. The RMU Learning Series examines actual solutions submitted by alumni to a particular problem. The purpose is to give you an overview of the types of solutions presented and the reasoning that went into producing them.

@@ -1,6 +1,3 @@
-08 Conclusion
-==================
-
 This problem of representing a table structure in Ruby which, at first glance, seemed straightforward turned out to be quite tricky in practice. This is borne out by the fact that many of the RMU students ended up taking very different approaches.
 
 So why did we see this variety in the solutions? One factor is the native complexity of the problem itself. It requires finding a way of treating rows and columns as separate entities on the one hand, and on the other, maintaining their status as simply different views of the same data set.

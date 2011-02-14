@@ -19,13 +19,12 @@ LearningSeries.generate("table.pdf") do
       title.gsub!('.md', ' ')
       title.gsub!('-', ' ')
       
-      title = "Chapter #{number.to_i}: #{title}" if number > 0
-      
       outline.define do
-        section(title, :destination => page_number)
+        t = number > 0 ? "Chapter #{number}: #{title}" : title
+        section(t, :destination => page_number)
       end
       
-      load_chapter(File.join(chapters_folder, chapter))
+      load_chapter(File.join(chapters_folder, chapter), number, title)
     end
   end
 end

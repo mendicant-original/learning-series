@@ -60,13 +60,21 @@ class LearningSeries < Jambalaya
     image("#{File.dirname(__FILE__)}/../assets/rmu_logo.png",
           :scale => 0.3,
           :at => [0, 30])
+    
+    
+    outline.define do
+      page(:title => "Cover", :destination => page_number)
+    end
   end
   
-  def load_chapter(filename)
+  def load_chapter(filename, number, title)
     mk   = BlueCloth.new(File.read(filename))
     tags = Nokogiri::HTML(mk.to_html)
     
-    process_tags tags.search("body").children
+    chapter = number > 0 ? "CHAPTER #{number}" : nil
+    title(chapter, title)
+    
+    process_tags(tags.search("body").children)
   end
   
   def process_tags(tags)
@@ -80,17 +88,9 @@ class LearningSeries < Jambalaya
     end
   end
   
+  #
   # Mapping the html tags to Jambalaya methods
-  def h1_to_prawn(tag)
-    chapter_number = nil
-    str = tag.inner_html
-    
-    if str =~ /^\d+/
-      chapter_number = "CHAPTER #{str.slice!(/^\d+/).to_i}"
-    end
-    
-    title chapter_number, str.strip
-  end
+  #
   
   def h2_to_prawn(tag)
     move_down 0.1.in

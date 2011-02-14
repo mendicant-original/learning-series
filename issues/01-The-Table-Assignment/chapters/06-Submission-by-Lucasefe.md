@@ -1,6 +1,3 @@
-06 Submission by Lucas Efe
-======================
-
 Although it works and has a fairly clean API, the solution presented above is by no means perfect. We have already mentioned the somewhat awkward access to columns. Another, just as serious problem is that all the code for the entire table lives in a single class, which is a code smell that indicates a violation of the Single Responsibility Principle.
 
 <h6 title="Single Responsibility Principle">

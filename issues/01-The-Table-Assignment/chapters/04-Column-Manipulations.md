@@ -1,6 +1,3 @@
-04 Column Manipulations
-=======================
-
 By modeling the table data as a two-dimensional array, we were able to easily access and manipulate rows using common Array methods. However, as we turn our attention to column functionality, we shall see that this "row-centric" representation is not without cost. For example, retrieving the contents of a particular column would necessitate iterating through each row, extracting the data cell of that column and mapping it to a new array. 
 
 At this point one might be tempted to use a convenient array method, such as Array#transpose to temporarily remap the rows as columns. Here is a quick demonstration of what this method accomplishes:

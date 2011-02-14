@@ -1,6 +1,3 @@
-02 Data Access
-==============
-
 The way things stand now, the Table class is siphoning off our first row as the column headers no matter what:
 
     >> my _table = Table.new [[1, 2, 3], [4,5,6]]

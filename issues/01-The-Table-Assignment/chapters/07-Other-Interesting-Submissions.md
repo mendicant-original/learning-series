@@ -1,6 +1,3 @@
-07 Other Interesting Submissions
-=================================
-
 This chapter deals with two more alumni submissions that are interesting for different reasons.
 
 Eric G. tried to optimize memory usage, which is a valid concern when dealing with large data sets. He also had a unique idea regarding data storage.

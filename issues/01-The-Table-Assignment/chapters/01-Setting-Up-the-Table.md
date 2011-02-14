@@ -1,6 +1,3 @@
-01 Setting Up the Table
-=======================
-
 The most intuitive way to represent a table in Ruby is by a two dimensional array - where an individual row is an array and the collection of rows is also an array. 
 
 In keeping with TDD practices, we'll begin with the simplest possible scenario, namely by initializing an empty table object. 

@@ -1,6 +1,3 @@
-05 Handling Exceptions and Bad Input
-======================
-
 In a perfect world, we could probably be done at this point. However, we have so far completely ignored an important aspect, namely dealing with potential errors.
 
 We start with mimicking errors that could occur when accessing table data if non-existent rows or columns are being referenced. We could call them "out of bounds" errors. Consider the following scenario:
