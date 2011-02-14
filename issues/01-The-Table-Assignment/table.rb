@@ -16,7 +16,7 @@ LearningSeries.generate("table.pdf") do
       title  = chapter.dup
       number = title.slice!(/\d+/).to_i
       
-      title.gsub!('.mk', ' ')
+      title.gsub!('.md', ' ')
       title.gsub!('-', ' ')
       
       title = "Chapter #{number.to_i}: #{title}" if number > 0
