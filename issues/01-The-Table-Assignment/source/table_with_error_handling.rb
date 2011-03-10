@@ -7,9 +7,15 @@ class Table
   
   attr_reader :rows, :headers, :header_support
   def initialize(data = [], options = {})
-    check_data_row_length(data)
+    check_type(data)
+    data.each do |row|
+      check_type(row)
+      check_length(row, data.first.length, "Inconsistent rows length")
+    end
+    
     @header_support = options[:headers] 
     set_headers(data.shift) if @header_support
+    
     @rows = data
   end
   
@@ -37,7 +43,7 @@ class Table
   end
 
   def max_y
-    rows[0].length
+    rows.first and rows.first.length
   end
   
   def check_row_index(pos)
@@ -49,7 +55,8 @@ class Table
   # Row Manipulations
 
   def add_row(new_row, pos=nil)
-    check_consistent_length(:row, new_row)
+    check_type(new_row)
+    check_length(new_row, max_y, "Inconsistent row length") unless @rows.empty?
     
     i = pos.nil? ? rows.length : pos
     rows.insert(i, new_row)
@@ -85,7 +92,8 @@ class Table
   end
 
   def add_column(col, pos=nil)
-    check_consistent_length(:column, col)
+    check_type(col)
+    check_length(col, max_x+1, "Inconsistent column length")
     
     i = pos.nil? ? rows.first.length : pos
     
@@ -145,31 +153,11 @@ class Table
       end
     end
     
-    def check_consistent_length(type, array)
-      case type
-      when :row
-        if !rows.empty? && array.length != rows.first.length
-          raise ArgumentError, "Inconsistent row length"
-        end
-      when :column
-        unless array.length-1 == @rows.length
-          raise ArgumentError, "Inconsistent column length"
-        end
-      else
-        raise ArgumentError, "Unknown type"
-      end
+    def check_type(data)
+      raise(ArgumentError, "Input is not an array") unless Array === data
     end
 
-    def check_data_row_length(data)
-      return if data == []
-      
-      first_row_length = data.first.length   
-      begin
-        unless data.all? {|row| row.length == first_row_length }
-          raise ArgumentError, "Inconsistent row length in seed data" 
-        end
-      rescue NoMethodError
-        raise ArgumentError, "table should be a nested array"
-      end
+    def check_length(data, expected, msg="Input length is inconsistent")
+      raise(ArgumentError, msg) unless data.length == expected
     end
 end

@@ -164,7 +164,11 @@ Considering all these issues with truncation/padding, we will instead raise an e
     class Table
 
       def initialize(data = [], options = {})
-        check_data_row_length(data)
+        check_type(data)
+        data.each do |row|
+          check_type(row)
+          check_length(row, data.first.length, "Inconsistent rows length")
+        end
         
         @header_support = options[:headers]
         set_headers(data.shift) if @header_support
@@ -173,7 +177,8 @@ Considering all these issues with truncation/padding, we will instead raise an e
       end
 
       def add_row(new_row, pos=nil)
-        check_consistent_length(:row, new_row)
+        check_type(new_row)
+        check_length(new_row, max_y, "Inconsistent row length") unless @rows.empty?
         
         i = pos.nil? ? rows.length : pos
         rows.insert(i, new_row)
@@ -181,7 +186,8 @@ Considering all these issues with truncation/padding, we will instead raise an e
    
    
       def add_column(col, pos=nil)
-        check_consistent_length(:column, col)
+        check_type(col)
+        check_length(col, max_x+1, "Inconsistent column length")
         
         i = pos.nil? ? rows.first.length : pos
 
@@ -199,33 +205,13 @@ Considering all these issues with truncation/padding, we will instead raise an e
 
       private
 
-      def check_consistent_length(type, array)
-        case type
-        when :row
-          if !rows.empty? && array.length != rows.first.length
-            raise ArgumentError, "Inconsistent row length"
-          end
-        when :column
-          unless array.length-1 == @rows.length
-            raise ArgumentError, "Inconsistent column length"
-          end
-        else
-          raise ArgumentError, "Unknown type"
-        end
+      def check_type(data)
+        raise(ArgumentError, "Input is not an array") unless Array === data
       end
 
-      def check_seed_data_row_length(data)  
-        return if data == []
-        
-        first_row_length = data.first.length   
-        begin
-          unless data.all? {|row| row.length == first_row_length }
-            raise ArgumentError, "Inconsistent row length in seed data" 
-          end
-        rescue NoMethodError
-          raise ArgumentError, "table should be a nested array"
-        end
-      end  
+      def check_length(data, expected, msg="Input length is inconsistent")
+        raise(ArgumentError, msg) unless data.length == expected
+      end
 
     end
 
