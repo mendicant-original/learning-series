@@ -110,7 +110,8 @@ Here then is the code to guard against both potential sources of error:
         if header_support
           header_name = col.shift
           check_header_names(header_name)
-          headers[header_name]  = i
+          @headers.each { |k,v| @headers[k] += 1 if v >= i }
+          @headers[header_name]  = i
         end
         
         @rows.each do |row|
@@ -123,6 +124,7 @@ Here then is the code to guard against both potential sources of error:
         
         if header_support
           header_name = @headers.key(pos)
+          @headers.each { |k,v| headers[k] -= 1 if v > pos }
           @headers.delete(header_name)
         end
         

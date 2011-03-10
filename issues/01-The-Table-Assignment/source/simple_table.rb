@@ -85,9 +85,14 @@ class Table
 
   def select_columns
     selected = []
-    (0..(max_y - 1)).each do |i|
+
+    (0...max_y).each do |i|
       col = @rows.map { |row| row[i] }
-      delete_column(i) unless yield col
+      selected.unshift(i) unless yield col
+    end
+
+    selected.each do |pos|
+      delete_column(pos)
     end
   end
    

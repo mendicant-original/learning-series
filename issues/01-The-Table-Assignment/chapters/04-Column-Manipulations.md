@@ -157,14 +157,22 @@ In this case we are yielding each cell in the column to the block defined by the
       end
     end
 
-Last but not least, we also want to filter out columns that don't meet a particular condition. As a somewhat contrived example, we want to select only columns that have numeric data:
+Last but not least, we also want to filter out columns that don't meet a particular condition. As a somewhat contrived example, we want to select only the items that for which the column sum is lower than 10:
 
     test "can select columns by some criteria" do
-      @table.select_columns do |col|
-        col.all? {|c| Numeric === c } 
+      table = Table.new([["item1", "item2", "item3", "item4", "item5"],
+                         [3, 7, 4, 9, 2],
+                         [4, 8, 2, 3, 1],
+                         [0, 9, 3, 4, 6]
+                         ],
+                        :headers => true)
+    
+      table.select_columns do |col|
+        col.inject(0, &:+) < 10
       end
-      assert_equal 1, @table.row(0).length
-      assert_equal ["age"], @table.headers
+    
+      assert_equal 3, table.rows[0].length
+      assert_equal(["item1", "item3", "item5"], table.headers)
     end
   
 Given our current, row-biased approach there is simply no easy way of doing this. We have to temporarily create each column and check it against the condition defined in the block sent to the select\_columns() method. Since we expect the block to return true or false we can take that as an indication for whether we should delete or keep the column. The execution of the latter we will delegate to the existing delete_column() method.
@@ -177,9 +185,14 @@ Given our current, row-biased approach there is simply no easy way of doing this
 
       def select_columns
         selected = []
-        (0..(max_y - 1)).each do |i|
-          col = @rows.map {|row| row[i] }
-          delete_column(i) unless yield col
+
+        (0...max_y).each do |i|
+          col = @rows.map { |row| row[i] }
+          selected.unshift(i) unless yield col
+        end
+
+        selected.each do |pos|
+          delete_column(pos)
         end
       end
     end

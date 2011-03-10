@@ -3,17 +3,26 @@
 class Table
   
   NoRowError = Class.new(StandardError)
+  NoColumnError = Class.new(StandardError)
   
   attr_reader :rows, :headers, :header_support
   def initialize(data = [], options = {})
-    @header_support = options[:headers]
-    @headers = @header_support ? data.shift : []
+    @header_support = options[:headers] 
+    set_headers(data.shift) if @header_support
     @rows = data
+  end
+  
+  def set_headers(header_names)
+    @headers = {}
+    header_names.each_with_index do |item, index|
+      @headers[item] = index
+    end
   end
 
   def column_index(pos)
-    i = headers.index(pos)
-    i.nil? ? pos : i
+    pos = @headers[pos] || pos
+    check_column_index(pos)
+    pos
   end
 
   def [](row, col)
@@ -67,15 +76,21 @@ class Table
   end
 
   def rename_column(old_name, new_name)
-    i = @headers.index(old_name)
-    @headers[i] = new_name
+    check_header_names(new_name)
+    @headers[new_name] = @headers[old_name]
+    @headers.delete(old_name)
   end
 
   def add_column(col, pos=nil)
     i = pos.nil? ? rows.first.length : pos
+    
     if header_support
-      headers.insert(i, col.shift)
+      header_name = col.shift
+      check_header_names(header_name)
+      @headers.each { |k,v| @headers[k] += 1 if v >= i }
+      @headers[header_name]  = i
     end
+    
     @rows.each do |row|
       row.insert(i, col.shift)
     end
@@ -83,10 +98,14 @@ class Table
 
   def delete_column(pos)
     pos = column_index(pos)
+    
     if header_support
-      @headers.delete_at(pos)
+      header_name = @headers.key(pos)
+      @headers.each { |k,v| headers[k] -= 1 if v > pos }
+      @headers.delete(header_name)
     end
-    @rows.map { |row| row.delete_at(pos) }
+    
+    @rows.map {|row| row.delete_at(pos) }
   end
 
   def transform_columns(pos, &block)
@@ -98,10 +117,26 @@ class Table
 
   def select_columns
     selected = []
-    (0..(max_y - 1)).each do |i|
+    
+    (0...max_y).each do |i|
       col = @rows.map { |row| row[i] }
-      delete_column(i) unless yield col
+      selected.unshift(i) unless yield col
+    end
+    
+    selected.each do |pos|
+      delete_column(pos)
     end
   end
-   
+  
+  private
+    def check_header_names(name)
+      raise ArgumentError, "Name already taken" if @headers[name]
+    end
+    
+    def check_column_index(pos)
+      unless (-max_y..max_y).include?(pos)
+        raise NoColumnError,
+              "The column does not exist or the index is out of range"
+      end
+    end
 end
