@@ -2,9 +2,8 @@ In a perfect world, we could probably be done at this point. However, we have so
 
 We start with mimicking errors that could occur when accessing table data if non-existent rows or columns are being referenced. We could call them "out of bounds" errors. Consider the following scenario:
 
-    >> @data = [[1,2,3], [4,5,6]]
-    >> my_table = Table.new(@data)
-    >> my_table[99, 99]
+    >> table = Table.new(@data)
+    >> table[99, 99]
     => NoMethodError: undefined method `[]' for nil:NilClass
 
 As a reminder, here is the code that is for now unprepared to handle such a case:
@@ -50,21 +49,21 @@ Column names
 
 Since columns can be referenced either by their index or by their name we could encounter nonexistent column names, as in:
 
-    >> my_table[2, "bad_column"]
+    >> table[2, "bad_column"]
     => TypeError: can't convert String into Integer
 
 Or what if we were to insert or rename a column using a name that is already taken:
 
-    >> my_table.add_column(["age", 10, 11, 12, 13, 14])
-    >> my_table.headers
+    >> table.add_column(["age", 10, 11, 12, 13, 14])
+    >> table.headers
     => ["name", "age", "occupation", "age"]
-    >> my_table[2, "age"]
+    >> table[2, "age"]
     => 45
 
-    >> my_table.rename_column("name", "age")
-    >> my_table.headers.inspect 
+    >> table.rename_column("name", "age")
+    >> table.headers
     => ["age", "age", "occupation", "age"]
-    >> my_table[2, "age"]
+    >> table[2, "age"]
     => George
 
 To handle the case of referencing a column that doesn't exist, we can apply a similar strategy as for the rows. We can intercept the method that determines the numeric index of the column based on either a string or an integer. 
@@ -220,7 +219,7 @@ page_break
 Data corruption
 ---------------
 
-The user of our API can at any time inadvertently corrupt the table data by tinkering with the seed data. Conversely, changes initiated through the table will also affect the seed data. 
+The user of our API can at any time inadvertently corrupt the table internals by tinkering with the provided data. Conversely, changes initiated through the table will also affect the provided data. 
 
 The root of the issue is that in Ruby variables hold references to objects, not the objects themselves. So if the same object is referenced by different variables, we need to keep in mind that changes made to the object will be visible no matter which variable we chose to reference the object by. Here's a simple example to illustrate the point:
 
@@ -233,16 +232,16 @@ The root of the issue is that in Ruby variables hold references to objects, not 
     >> puts "person2 is #{person2}" 
     => person2 is Jim 
 
-So, in our case, when we initialize a new Table we are setting the @rows variable to reference the same two-dimensional array as @simple\_data does. Here you can see that when we remove the first array as headers, we are also altering @simple_data:
+So, in our case, when we initialize a new Table we are setting the @rows variable to reference the same two-dimensional array as @data does. Here you can see that when we remove the first array as headers, we are also altering @data:
 
-    >> @simple_data = [["name",  "age", "occupation"],
-                       ["Tom", 32,"engineer"], 
-                       ["Beth", 12,"student"], 
-                       ["George", 45,"photographer"],
-                       ["Laura", 23, "aviator"],
-                       ["Marilyn", 84, "retiree"]]
-    >> my_table = Table.new(@simple_data, :headers => true)
-    >> @simple_data
+    >> @data = [["name",  "age", "occupation"],
+                ["Tom", 32,"engineer"],
+                ["Beth", 12,"student"],
+                ["George", 45,"photographer"],
+                ["Laura", 23, "aviator"],
+                ["Marilyn", 84, "retiree"]]
+    >> table = Table.new(@data, :headers => true)
+    >> @data
     => [["Tom", 32,"engineer"], 
         ["Beth", 12,"student"], 
         ["George", 45,"photographer"],
@@ -266,14 +265,14 @@ We can change the initialize method in order to avoid damaging the data provided
   
     end
 
-While this approach doesn't change the provided data, data corruption can still happen. Here is another example of how altering the seed data will be reflected when we access the data through the Table instance:
+While this approach doesn't change the provided data, data corruption can still happen. Here is another example of how altering @data will be reflected when we access the Table instance:
 
-    >> my_table = Table.new(@simple_data, :headers => true)
-    >> @simple_data[2][2] = "king of the world"
-    >> my_table[2, 2]
+    >> table = Table.new(@data)
+    >> @data[2][2] = "king of the world"
+    >> table[2, 2]
     => "king of the world"
 
-Let's say that to prevent accidental data corruption we want to somehow duplicate the seed data when we initialize the table. We might try to use Object#dup to accomplish this.
+Let's say that to prevent accidental data corruption we want to somehow duplicate the provided data when we initialize the table. We might try to use Object#dup to accomplish this.
 
     class Table
 
@@ -286,9 +285,9 @@ Let's say that to prevent accidental data corruption we want to somehow duplicat
 
 Simple, isn't it? Except that this doesn't solve our problem. The behavior from the previous example remains.
 
-    >> my_table = Table.new(@simple_data, :headers => true)
-    >> @simple_data[2][2] = "king of the world"
-    >> my_table[2, 2]
+    >> table = Table.new(@data)
+    >> @data[2][2] = "king of the world"
+    >> table[2, 2]
     => "king of the world"
 
 Let's examine the dup() method a little closer:
@@ -303,17 +302,17 @@ Produces a shallow copy of obj — the instance variables of obj are copied, but
 In general, dup duplicates just the state of an object, while clone also copies the state, any associated singleton class, and any internal ﬂags (such as whether the object is frozen). The taint status is copied by both dup and clone. 
 </h6>
 
-So if we dup() the seed data that's passed to our initialize method and before we assign it to Table#rows, the outer array that @rows points to is indeed a different object from the outer array held in @simple\_data. However, Table#rows and @simple_data are still both referencing the same internal arrays, meaning the actual rows. To prove the point:
+So if we dup() the data that's passed to our initialize method before we assign it to Table#rows, the outer array that @rows points to is indeed a different object from the outer array held in @data. However, Table#rows and @data are still both referencing the same internal arrays, meaning the actual rows. To prove the point:
 
-    >> my_table = Table.new(@simple_data, :headers => true)
-    >> my_table.rows.object_id    # note that the output is run specific
+    >> table = Table.new(@data)
+    >> table.rows.object_id    # note that the output is run specific
     => 2151823700  
-    >> @simple_data.object_id
+    >> @data.object_id
     => 2151823780
 
-    >> my_table.row(0).object_id
+    >> table.row(0).object_id
     => 2151825160
-    >> @simple_data[0].object_id
+    >> @data[0].object_id
     => 2151825160
 
 
@@ -344,13 +343,17 @@ Saving an object and some or all of its components is done using the method Mars
       
     end
 
-We use Marshal.dump to output a string representation of the object tree referenced by "data" and then use this string as the input for Marshal.load which reconstructs the full object tree. Now there is no cross-reference between @simple_data and the table @rows. We can also say that the Table.new method is side effect free:
+We use Marshal.dump to output a string representation of the object tree referenced by "data" and then use this string as the input for Marshal.load which reconstructs the full object tree. Now there is no cross-reference between @data and the table @rows. We can also say that the Table.new method is side effect free:
 
-    >> my_table = Table.new(@simple_data, :headers => true)
-    >> @simple_data[2][2] = "king of the world"
-    >> my_table[2, 2]
+    >> table = Table.new(@data, :headers => true)
+    >> @data[2][2] = "king of the world"
+    >> table[2, 2]
     => "photographer"
-    >> @simple_data[0]
+    >> @data[0]
     => ["name", "age", "occupation"]
 
 Unfortunately this method is not without drawbacks. Apart from the time that it takes to marshall and unmarshall the seed data, we are temporarily storing two copies of the same nested array.
+
+You may find this improved implementation with error handling complete with tests here: https://github.com/rmu/learning-series/tree/master/issues/01-The-Table-Assignment/source
+
+While this implementation is more robust than the one from the last chapter there's still room for improvement. On the following chapters we'll take a look at some interesting student submissions.
