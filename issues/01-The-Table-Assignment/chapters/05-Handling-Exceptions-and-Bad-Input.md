@@ -118,6 +118,8 @@ Here then is the code to guard against both potential sources of error:
         end
       end
 
+page_break
+
       def delete_column(pos)
         pos = column_index(pos)
         
@@ -129,8 +131,6 @@ Here then is the code to guard against both potential sources of error:
         
         @rows.map {|row| row.delete_at(pos) }
       end
-      
-page_break
 
     private
 
