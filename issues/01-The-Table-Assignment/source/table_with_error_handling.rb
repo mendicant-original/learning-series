@@ -2,6 +2,8 @@
 
 class Table
   
+  NoRowError = Class.new(StandardError)
+  
   attr_reader :rows, :headers, :header_support
   def initialize(data = [], options = {})
     @header_support = options[:headers]
@@ -15,12 +17,23 @@ class Table
   end
 
   def [](row, col)
+    check_row_index(row)
     col = column_index(col)
     rows[row][col]
+  end
+  
+  def max_x
+    @rows.length
   end
 
   def max_y
     rows[0].length
+  end
+  
+  def check_row_index(pos)
+    unless (-max_x..max_x).include?(pos)
+      raise NoRowError, "The row index is out of range"
+    end
   end
 
   # Row Manipulations
