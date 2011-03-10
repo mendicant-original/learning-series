@@ -26,22 +26,24 @@ A simple fix could involve checking the requested index before attempting to ret
     
       NoRowError = Class.new(StandardError)
 
-      def max_x
-        @rows.length
-      end
-
       def [](row, col)
-        check_row_index
+        check_row_index(row)
         col = column_index(col)
         rows[row][col]
       end
 
-      def check_row_index
+      def max_x
+        @rows.length
+      end
+
+      def check_row_index(pos)
         unless (-max_x..max_x).include?(pos) 
           raise NoRowError, "The row index is out of range"
         end
       end
     end
+
+This leaves Table#[] with mixed behavior when a row or column is out of bounds. For a row it will return an error and for a column it will return nil. Dealing with columns means that we need to take column names into account so the next section will also take care of making the Table#[] behavior consistent.
 
 Column names
 ------------
