@@ -5,6 +5,73 @@ require "contest"
 
 require_relative "../table_with_error_handling"
 
+class ErrorHandlingTest < Test::Unit::TestCase
+  setup do
+    @data = [["name",   "age", "occupation"  ],
+             ["Tom",     32,   "engineer"    ],
+             ["Beth",    12,   "student"     ],
+             ["George",  45,   "photographer"],
+             ["Laura",   23,   "aviator"     ],
+             ["Marilyn", 84,   "retiree"     ]]
+    
+    @table = Table.new(@data, :headers => true)
+  end
+  
+  context "[] out of bounds" do
+    test "on row raises NoRowError" do
+      assert_raise(Table::NoRowError) {
+        @table[99, 0]
+      }
+    end
+    
+    test "on column raises NoColumnError" do
+      assert_raise(Table::NoColumnError) {
+        @table[0, 99]
+      }
+    end
+  end
+  
+  context "column names" do
+    test "raises NoColumnError when unknown column name" do
+      assert_raise(Table::NoColumnError) {
+        @table[0, "unknown column"]
+      }
+    end
+    
+    test "raises ArgumentError when adding a column with an existing name" do
+      assert_raise(ArgumentError) {
+        @table.add_column(["age", 10, 11, 12, 13, 14])
+      }
+    end
+    
+    test "raises ArgumentError when renaming a column to an existing name" do
+      assert_raise(ArgumentError) {
+        @table.rename_column("name", "age")
+      }
+    end
+  end
+  
+  context "bad input raises ArgumentError" do
+    test "when table is set with uneven row length" do
+      assert_raise(ArgumentError) {
+        Table.new([[1,2,3], [4,5], [6]])
+      }
+    end
+    
+    test "when adding a row with uneven length" do
+      assert_raise(ArgumentError) {
+        @table.add_row(["Greg"])
+      }
+    end
+    
+    test "when adding a column with uneven length" do
+      assert_raise(ArgumentError) {
+        @table.add_column(["short_column", "value"])
+      }
+    end
+  end
+end
+
 class TableTest < Test::Unit::TestCase 
   setup do
     @data = [["name",   "age", "occupation"  ],
@@ -153,53 +220,6 @@ class TableTest < Test::Unit::TestCase
       
       assert_equal 3, table.max_x
       assert_equal({"item1" => 0, "item3" => 1, "item5" => 2}, table.headers)
-    end
-  end
-end
-
-class ErrorHandlingTest < Test::Unit::TestCase
-  setup do
-    @data = [["name",   "age", "occupation"  ],
-             ["Tom",     32,   "engineer"    ],
-             ["Beth",    12,   "student"     ],
-             ["George",  45,   "photographer"],
-             ["Laura",   23,   "aviator"     ],
-             ["Marilyn", 84,   "retiree"     ]]
-    
-    @table = Table.new(@data, :headers => true)
-  end
-  
-  context "[] out of bounds" do
-    test "on row raises NoRowError" do
-      assert_raise(Table::NoRowError) {
-        @table[99, 0]
-      }
-    end
-    
-    test "on column raises NoColumnError" do
-      assert_raise(Table::NoColumnError) {
-        @table[0, 99]
-      }
-    end
-  end
-  
-  context "column names" do
-    test "raises NoColumnError when unknown column name" do
-      assert_raise(Table::NoColumnError) {
-        @table[0, "unknown column"]
-      }
-    end
-    
-    test "raises ArgumentError when adding a column with an existing name" do
-      assert_raise(ArgumentError) {
-        @table.add_column(["age", 10, 11, 12, 13, 14])
-      }
-    end
-    
-    test "raises ArgumentError when renaming a column to an existing name" do
-      assert_raise(ArgumentError) {
-        @table.rename_column("name", "age")
-      }
     end
   end
 end

@@ -164,7 +164,7 @@ Considering all these issues with truncation/padding, we will instead raise an e
     class Table
 
       def initialize(data = [], options = {})
-        check_seed_data_row_length(data)
+        check_data_row_length(data)
         
         @header_support = options[:headers]
         set_headers(data.shift) if @header_support
@@ -184,26 +184,29 @@ Considering all these issues with truncation/padding, we will instead raise an e
         check_consistent_length(:column, col)
         
         i = pos.nil? ? rows.first.length : pos
-        
+
         if header_support
-          headers.insert(i, col.shift)
+          header_name = col.shift
+          check_header_names(header_name)
+          @headers.each { |k,v| @headers[k] += 1 if v >= i }
+          @headers[header_name]  = i
         end
-        
+
         @rows.each do |row|
           row.insert(i, col.shift)
         end
       end
 
-    private
+      private
 
       def check_consistent_length(type, array)
         case type
         when :row
-          unless array.length == rows.first.length
+          if !rows.empty? && array.length != rows.first.length
             raise ArgumentError, "Inconsistent row length"
           end
         when :column
-          unless array.length == @rows.length
+          unless array.length-1 == @rows.length
             raise ArgumentError, "Inconsistent column length"
           end
         else
@@ -212,6 +215,8 @@ Considering all these issues with truncation/padding, we will instead raise an e
       end
 
       def check_seed_data_row_length(data)  
+        return if data == []
+        
         first_row_length = data.first.length   
         begin
           unless data.all? {|row| row.length == first_row_length }

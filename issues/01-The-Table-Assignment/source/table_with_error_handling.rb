@@ -7,6 +7,7 @@ class Table
   
   attr_reader :rows, :headers, :header_support
   def initialize(data = [], options = {})
+    check_data_row_length(data)
     @header_support = options[:headers] 
     set_headers(data.shift) if @header_support
     @rows = data
@@ -48,6 +49,8 @@ class Table
   # Row Manipulations
 
   def add_row(new_row, pos=nil)
+    check_consistent_length(:row, new_row)
+    
     i = pos.nil? ? rows.length : pos
     rows.insert(i, new_row)
   end
@@ -82,6 +85,8 @@ class Table
   end
 
   def add_column(col, pos=nil)
+    check_consistent_length(:column, col)
+    
     i = pos.nil? ? rows.first.length : pos
     
     if header_support
@@ -137,6 +142,34 @@ class Table
       unless (-max_y..max_y).include?(pos)
         raise NoColumnError,
               "The column does not exist or the index is out of range"
+      end
+    end
+    
+    def check_consistent_length(type, array)
+      case type
+      when :row
+        if !rows.empty? && array.length != rows.first.length
+          raise ArgumentError, "Inconsistent row length"
+        end
+      when :column
+        unless array.length-1 == @rows.length
+          raise ArgumentError, "Inconsistent column length"
+        end
+      else
+        raise ArgumentError, "Unknown type"
+      end
+    end
+
+    def check_data_row_length(data)
+      return if data == []
+      
+      first_row_length = data.first.length   
+      begin
+        unless data.all? {|row| row.length == first_row_length }
+          raise ArgumentError, "Inconsistent row length in seed data" 
+        end
+      rescue NoMethodError
+        raise ArgumentError, "table should be a nested array"
       end
     end
 end
