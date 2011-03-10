@@ -13,7 +13,7 @@ We hope that you have enjoyed this paper as much as we've had writing it.
 Special Thanks
 ----------------------
 
-Special thanks to our mentor Gregory Brown for being the driving force behind RMU and to the RMU alumni Lucas F., Wojciech P. and Eric G. for their helpful feedback and for allowing us to feature their solutions.
+Special thanks to our mentor Gregory Brown for being the driving force behind RMU and to the RMU alumni Lucas F., Wojciech P. and Eric G. for their helpful feedback and for allowing us to feature their solutions. Eric also helped us with some of the error handling code.
 
 Getting Involved
 ----------------------
