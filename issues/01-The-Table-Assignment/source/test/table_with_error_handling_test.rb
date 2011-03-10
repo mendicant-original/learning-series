@@ -70,6 +70,26 @@ class ErrorHandlingTest < Test::Unit::TestCase
       }
     end
   end
+  
+  context "data corruption" do
+    setup do
+      @provided = [["header"], ["value"]]
+      @pristine = Marshal.load(Marshal.dump(@provided))
+    end
+    
+    test ".new doesn't corrupt provided data" do
+      Table.new(@provided, :headers => true)
+      
+      assert_equal @pristine, @provided
+    end
+    
+    test "a change on the initial data doesn't change the Table internals" do
+      table = Table.new(@provided)
+      @provided[0][0] = "different_header"
+      
+      assert_not_equal @provided, table.rows
+    end
+  end
 end
 
 class TableTest < Test::Unit::TestCase 

@@ -14,9 +14,9 @@ class Table
     end
     
     @header_support = options[:headers] 
-    set_headers(data.shift) if @header_support
     
-    @rows = data
+    @rows = Marshal.load(Marshal.dump(data))
+    set_headers(@rows.shift) if @header_support
   end
   
   def set_headers(header_names)

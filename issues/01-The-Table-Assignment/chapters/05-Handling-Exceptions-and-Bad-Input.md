@@ -330,8 +330,14 @@ Saving an object and some or all of its components is done using the method Mars
     class Table
 
       def initialize(data = [], options = {})
-        @header_support = options[:headers]
-        check_seed_data_row_length(data)
+        check_type(data)
+        data.each do |row|
+          check_type(row)
+          check_length(row, data.first.length, "Inconsistent rows length")
+        end
+
+        @header_support = options[:headers] 
+
         @rows = Marshal.load(Marshal.dump(data))
         set_headers(@rows.shift) if @header_support
       end
