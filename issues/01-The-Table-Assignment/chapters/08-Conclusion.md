@@ -18,4 +18,13 @@ Special thanks to our mentor Gregory Brown for being the driving force behind RM
 Getting Involved
 ----------------------
 
-If you want to get involved in RMU, you can find more information on the official website at http://university.rubymendicant.com, on the IRC channel #rmu or follow Gregory Brown on Twitter (http://twitter.com/seacreature).  
+If you want to get involved in RMU, there are no shortage of options:
+
+The official website at http://university.rubymendicant.com is the first place you should look if you'd like to know more about us.
+
+On the IRC channel #rmu at Freenode you can chat with the students and staff. The channel is also the place for our monthly Q&A session with special guests.
+
+Follow Gregory Brown on Twitter (http://twitter.com/seacreature) to receive firsthand news about all our recent activities.
+
+And if you'd like to join us, waste no time and head to (insert official puzzlenode link).
+
