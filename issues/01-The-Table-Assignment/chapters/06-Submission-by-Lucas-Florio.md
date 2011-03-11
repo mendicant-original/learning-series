@@ -7,14 +7,16 @@ Generally speaking a "concern" is some idea about what a piece of software has t
 
 The Table class has some separation built-in by sporting short, focused methods. While this is a first step in the right direction, there should be other ways to break out functionality into separate, non-overlapping classes. This is however not as easy as it seems. Obvious attempts might include separating classes for rows and columns, but this will prove difficult because of the tight coupling between them. The coupling in question derives from the fact that they are essentially just different perspectives on the same data set. 
 
-Here, we're going to discuss a solution by Lucas Efe that manages to treat rows and columns as wholly separate objects, but without duplicating the data set. The trick is that they don't hold the actual data values, but delegate that responsibility to a Cell class. 
+Here, we're going to discuss a solution by Lucas Florio manages to treat rows and columns as wholly separate objects, but without duplicating the data set. The trick is that they don't hold the actual data values, but delegate that responsibility to a Cell class. 
+
+The complete code can be found at: https://github.com/lucasefe/s1-final
 
 page_break
 
 Rows, Columns and Cells
 ----------------------
 
-How exactly is this behavior accomplished? In the words of Lucas Efe:
+How exactly is this behavior accomplished? In the words of Lucas:
 
 > The object Bricks::Table stores two Bricks::Index objects. One for vertical access and one for horizontal, so you can access the data by column or row. For each cell that gets added to the table, an Bricks::Cell object is created. This Cell is also added to both indexes, so when you retrieve data by column or row, you always get what you want.
 
@@ -129,7 +131,7 @@ Reading vs. Writing Operations
 
 One of the major gripes we had with the solution we walked through step by step was the difficult access to columns, meaning that every time we had to retrieve a column, we needed to iterate through the rows and fetch the row item that corresponds to the column index in question.
 
-Lucas Efe found a neat workaround by storing the columns separately (but without duplicating the data set). However, this also comes with its own cost. Any operation that modifies the table - adding, inserting, deleting, filtering - is processing intensive in the sense that rows and columns need to be manually synched to each other, which effectively causes a "writing overhead".
+Lucas found a neat workaround by storing the columns separately (but without duplicating the data set). However, this also comes with its own cost. Any operation that modifies the table - adding, inserting, deleting, filtering - is processing intensive in the sense that rows and columns need to be manually synched to each other, which effectively causes a "writing overhead".
 
 One potential drawback is that this approach requires the creation of x*y Cell objects, whereby x is the number of rows and y the number of columns. This could lead to a high memory load in very large tables.
 

@@ -1,15 +1,15 @@
 This chapter deals with two more alumni submissions that are interesting for different reasons.
 
-Eric G. tried to optimize memory usage, which is a valid concern when dealing with large data sets. He also had a unique idea regarding data storage.
+Eric Gjertsen tried to optimize memory usage, which is a valid concern when dealing with large data sets. He also had a unique idea regarding data storage.
 
-Wojciech P. attempted to clearly separate concerns in an object oriented way. We will discuss the particulars of his solution a bit.
+Wojciech Piekutowski attempted to clearly separate concerns in an object oriented way. We will discuss the particulars of his solution a bit.
 
-Eric G.'s Submission
+Eric Gjertsen's Submission
 ---------------------
 
 The complete code can be found at: https://github.com/ericgj/s1-final
 
-From the data storage point of view, we've seen the possibility of simply storing an array of rows as provided by the user and Lucas Efe's approach from the last chapter which introduces a collection of Cell objects "indexed" by rows and columns. There are still other ways of storing the data that one could think of.
+From the data storage point of view, we've seen the possibility of simply storing an array of rows as provided by the user and Lucas Florio's approach from the last chapter which introduces a collection of Cell objects "indexed" by rows and columns. There are still other ways of storing the data that one could think of.
 
 Eric's idea was to store the data as a single flattened array instead of sticking with a two-dimensional array. That entails that the data is not contained in  traditional "rows" or "columns", which in the previous two solutions used to be the internal arrays.  
 
@@ -19,7 +19,7 @@ A "row" now becomes merely a virtual sequence in the array. It can be sliced out
 
 Here are some of Eric's thoughts on this way of storing the data:
 
-> The path I took was initially motivated by two related issues of encapsulation.  First of all, you're going to be doing operations on  both rows and columns which have some state in common with each other and with the table as a whole.  If rows and columns are basically arrays, you immediately run into the problem that state can't really be shared between them.  If you slice columns out of rows, how are you going to be able to "Run a transformation on a column which changes its content based on the return value of a block"? You'd be changing the  sliced array elements but not the row array elements.
+> The path I took was initially motivated by two related issues of encapsulation.  First of all, you're going to be doing operations on both rows and columns which have some state in common with each other and with the table as a whole. If rows and columns are basically arrays, you immediately run into the problem that state can't really be shared between them. If you slice columns out of rows, how are you going to be able to "Run a transformation on a column which changes its content based on the return value of a block"? You'd be changing the sliced array elements but not the row array elements.
   
 Of course this could be addressed by making the appropriate updates in the other storage option - something we have seen in the two previous solutions -, but Eric was opposed to what he called "*a lot of messy double changes*". He continues:
 
@@ -27,7 +27,7 @@ Of course this could be addressed by making the appropriate updates in the other
   
 He also mentions a third and relatively serious concern:
 
-> The  other thing running through my mind when I started thinking about the  problem was that the memory overhead should be kept as low as possible. I know the Ruby community tends to downplay this kind of concern upfront, but I think it's legitimate here given that we are already loading an arbitrary sized file into memory. That is -- you  have n rows * m cols objects before you even talk about a Table class and whatever else you need.
+> The other thing running through my mind when I started thinking about the  problem was that the memory overhead should be kept as low as possible. I know the Ruby community tends to downplay this kind of concern upfront, but I think it's legitimate here given that we are already loading an arbitrary sized file into memory. That is -- you  have n rows * m cols objects before you even talk about a Table class and whatever else you need.
 
 Mulling over potential memory issues, he came up with a way to "lazily load" rows and columns. Check out his ScopedCollection class to get a better picture:
 
@@ -37,7 +37,7 @@ page_break
 
 In retrospect, though, he voiced some doubts regarding his initial choice of storage, the flattened array.
 
-> Storing everything in a single array made things like inserting and deleting a  column quite complicated. I found myself wanting some variant of  Array#zip that inserts from one array into every nth element of another.  In the end, my col insert and delete methods end up rebuilding the entire table - not very efficient. On the other hand, having one array saves memory compared to an array of arrays, particularly for large numbers of rows.
+> Storing everything in a single array made things like inserting and deleting a  column quite complicated. I found myself wanting some variant of Array#zip that inserts from one array into every nth element of another.  In the end, my col insert and delete methods end up rebuilding the entire table - not very efficient. On the other hand, having one array saves memory compared to an array of arrays, particularly for large numbers of rows.
 
 This is how he would change things for future incarnations of the Table class:
 
@@ -161,7 +161,7 @@ Wojciech describes how he developed this API:
 A noteworthy feature of the code is including the Enumerable module in the proxy objects. By overriding the each() method in the classes that include Enumerable, we essentially (re)define what we consider to be the unit that we would like to be handled by iterator methods. This is an incredibly powerful feature, since many other methods, that rely on the particular implementation of each() in the background (e.g. select(), map() and inject()), will automatically work as expected.
 
 <h6 title="From the Practicing Ruby Newsletter">
-(....), there is surprising power in having a primitive built into your programming language which trivializes the implementation of the Template Method design pattern.  If you look at Ruby's Enumerable module and the powerful features it offers, you might think it would be a much more complicated example to study.  But it too hinges on Template Method and requires only an each() method to give you all sorts of complex functionality including things like select(), map(), and inject(). If you haven't tried it before, you should certainly try to roll your own Enumerable module to get a sense of just how useful mixins can be.
+(....), there is surprising power in having a primitive built into your programming language which trivializes the implementation of the Template Method design pattern. If you look at Ruby's Enumerable module and the powerful features it offers, you might think it would be a much more complicated example to study. But it too hinges on Template Method and requires only an each() method to give you all sorts of complex functionality including things like select(), map(), and inject(). If you haven't tried it before, you should certainly try to roll your own Enumerable module to get a sense of just how useful mixins can be.
 
 [Practicing Ruby] Issue #9: Uses For Modules, Part 2 of 4 by Gregory Brown
 </h6>
