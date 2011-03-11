@@ -114,7 +114,7 @@ class Table
     
     if header_support
       header_name = @headers.key(pos)
-      @headers.each { |k,v| headers[k] -= 1 if v > pos }
+      @headers.each { |k,v| @headers[k] -= 1 if v > pos }
       @headers.delete(header_name)
     end
     

@@ -65,7 +65,7 @@ This is what the tests and implementation for this feature could look like:
       end
 
       def column_index(pos)
-        i = headers.index(pos)
+        i = @headers.index(pos)
         i.nil? ? pos : i
       end
 

@@ -50,7 +50,7 @@ To implement this we map the rows by the index of the column in question:
     class Table
     
       def column_index(pos)
-        i = headers.index(pos)
+        i = @headers.index(pos)
         i.nil? ? pos : i
       end
   
@@ -106,7 +106,7 @@ The add\_column() method needs to know whether headers are being used or not. As
       def add_column(col, pos=nil)
         i = pos.nil? ? rows.first.length : pos
         if header_support
-          headers.insert(i, col.shift)
+          @headers.insert(i, col.shift)
         end
         @rows.each do |row|
           row.insert(i, col.shift)
