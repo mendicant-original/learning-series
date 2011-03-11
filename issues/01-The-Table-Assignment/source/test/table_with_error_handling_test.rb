@@ -74,13 +74,13 @@ class ErrorHandlingTest < Test::Unit::TestCase
   context "data corruption" do
     setup do
       @provided = [["header"], ["value"]]
-      @pristine = Marshal.load(Marshal.dump(@provided))
     end
     
     test ".new doesn't corrupt provided data" do
+      pristine = Marshal.load(Marshal.dump(@provided))
       Table.new(@provided, :headers => true)
       
-      assert_equal @pristine, @provided
+      assert_equal pristine, @provided
     end
     
     test "a change on the initial data doesn't change the Table internals" do
@@ -88,6 +88,26 @@ class ErrorHandlingTest < Test::Unit::TestCase
       @provided[0][0] = "different_header"
       
       assert_not_equal @provided, table.rows
+    end
+    
+    test "#add_row doesn't allow data corruption" do
+      table   = Table.new(@provided)
+      new_row = ["new row"]
+      
+      table.add_row(new_row)
+      new_row << "second item" << "third item"
+      
+      assert_not_equal new_row, table.rows.last
+    end
+    
+    test "#add_column doesn't corrupt provided column" do
+      table   = Table.new(@provided, :headers => true)
+      new_column = ["new header", "new value"]
+      pristine = Marshal.load(Marshal.dump(new_column))
+
+      table.add_column(new_column)
+      
+      assert_equal pristine, new_column
     end
   end
 end

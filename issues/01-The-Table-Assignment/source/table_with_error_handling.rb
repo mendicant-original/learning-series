@@ -58,8 +58,8 @@ class Table
     check_type(new_row)
     check_length(new_row, max_y, "Inconsistent row length") unless @rows.empty?
     
-    i = pos.nil? ? rows.length : pos
-    rows.insert(i, new_row)
+    i = pos.nil? ? max_x : pos
+    rows.insert(i, Marshal.load(Marshal.dump(new_row)))
   end
 
   def row(i)
@@ -94,6 +94,8 @@ class Table
   def add_column(col, pos=nil)
     check_type(col)
     check_length(col, max_x+1, "Inconsistent column length")
+    
+    col = Marshal.load(Marshal.dump(col))
     
     i = pos.nil? ? rows.first.length : pos
     

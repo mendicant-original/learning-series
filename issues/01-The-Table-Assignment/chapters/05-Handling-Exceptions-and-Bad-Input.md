@@ -354,6 +354,6 @@ We use Marshal.dump to output a string representation of the object tree referen
 
 Unfortunately this method is not without drawbacks. Apart from the time that it takes to marshall and unmarshall the seed data, we are temporarily storing two copies of the same nested array.
 
-You may find this improved implementation with error handling complete with tests here: https://github.com/rmu/learning-series/tree/master/issues/01-The-Table-Assignment/source
+This technique can also be applied when adding rows and columns. You may find this improved implementation complete with tests here: https://github.com/rmu/learning-series/tree/master/issues/01-The-Table-Assignment/source
 
 While this implementation is more robust than the one from the last chapter there's still room for improvement. On the following chapters we'll take a look at some interesting student submissions.
