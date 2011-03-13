@@ -1,21 +1,21 @@
-This chapter deals with two more alumni submissions that are interesting for different reasons.
+This chapter deals with two more alumni submissions that are noteworthy for different reasons.
 
 Eric Gjertsen tried to optimize memory usage, which is a valid concern when dealing with large data sets. He also had a unique idea regarding data storage.
 
-Wojciech Piekutowski attempted to clearly separate concerns in an object oriented way. We will discuss the particulars of his solution a bit.
+Wojciech Piekutowski attempted to cleanly separate concerns in an object oriented way. We will discuss the particulars of his solution in a bit.
 
 Eric Gjertsen's Submission
 ---------------------
 
 The complete code can be found at: https://github.com/ericgj/s1-final
 
-From the data storage point of view, we've seen the possibility of simply storing an array of rows as provided by the user and Lucas Florio's approach from the last chapter which introduces a collection of Cell objects "indexed" by rows and columns. There are still other ways of storing the data that one could think of.
+From the data storage point of view, we've considered the options of storing an array of rows as provided by the user and Lucas Florio's approach which introduces a collection of Cell objects "indexed" by rows and columns. Turns out that there are even more ways of representing the data.
 
-Eric's idea was to store the data as a single flattened array instead of sticking with a two-dimensional array. That entails that the data is not contained in  traditional "rows" or "columns", which in the previous two solutions used to be the internal arrays.  
+Eric's idea was to store the data as a single flattened array instead of as a two-dimensional array. The data is not contained in traditional "rows" or "columns" which, in the previous two solutions, were represented by the internal arrays.  
 
 If you stop and think about the implications of using a flattened array for a moment,  you'll realize that quite a bit would have to change in the way we think about rows and columns. 
 
-A "row" now becomes merely a virtual sequence in the array. It can be sliced out of the main array by calculating at which index it begins and ends at - calculations which are based on the row index and length. Similarly, a column would need to be assembled based on its calculated indices throughout the main array.
+A "row" now becomes merely a virtual sequence in the array. It can be sliced out of the main array by calculating the indexes at which it begins and ends - calculations which are based on the row index and length. Similarly, a column would need to be assembled based on its calculated indexes throughout the main array.
 
 Here are some of Eric's thoughts on this way of storing the data:
 
@@ -48,7 +48,7 @@ Wojciech Piekutowski's (W.P.) submission
 
 The complete code can be found at: https://github.com/wpiekutowski/s1-final
 
-What makes W.P.'s solution interesting is the way the code is organized. W.P. identified five classes that together make up the functionality necessary to have a working Ruby table implementation. Besides the Table class, there are classes representing the collection of rows and columns (Table::RowsProxy and Table::ColumnsProxy), as well as a class for an individual row and an individual column (Table::Row and Table::Column). 
+What makes W.P.'s solution interesting is the way the code is organized. He identified five classes that together make up the functionality necessary to have a working Ruby table implementation. Besides the Table class, there are classes representing the collection of rows and columns (Table::RowsProxy and Table::ColumnsProxy), as well as a class for an individual row and an individual column (Table::Row and Table::Column). 
 
 Here is an overview of the responsibility and and features of each:
 
@@ -85,8 +85,8 @@ Here's a snippet of the Table class:
 **Table::Row and Table::Column**:
 
 * references the Table's @matrix and the respective collection (rows or columns) it belongs to in @proxy
-* keeps track of its @index within the collection
-* takes care of operations within an individual row or column like:
+* keeps track of its own @index within the collection
+* takes care of operations within an individual row or column, such as:
     * mapping the row or column values
     * deleting the row or column
     * accessing row or column elements (cells)
@@ -158,7 +158,7 @@ Wojciech describes how he developed this API:
 
 > I was experimenting with an ideal API - I wanted it to read easily and be well suited for this kind of table operations. That gave me a good understanding on what I want to achieve and some initial ideas about implementation details. It was also a top-level guide about what I should test during the development. Next step was writing some initial specs and initial code. After that I followed red-green-refactor route. I had my general architecture done at the beginning, but as the project went on I did some changes - for example how different parts of the code should communicate or what data really needs to be shared.
 
-A noteworthy feature of the code is including the Enumerable module in the proxy objects. By overriding the each() method in the classes that include Enumerable, we essentially (re)define what we consider to be the unit that we would like to be handled by iterator methods. This is an incredibly powerful feature, since many other methods, that rely on the particular implementation of each() in the background (e.g. select(), map() and inject()), will automatically work as expected.
+A significant feature of the code is the including of the Enumerable module in the proxy objects. By overriding the each() method in the classes that include Enumerable, we essentially (re)define what we consider to be the unit that we would like to be handled by iterator methods. This is an incredibly powerful feature, since many other methods, that rely on the particular implementation of each() in the background (e.g. select(), map() and inject()), will automatically work as expected.
 
 <h6 title="From the Practicing Ruby Newsletter">
 (....), there is surprising power in having a primitive built into your programming language which trivializes the implementation of the Template Method design pattern. If you look at Ruby's Enumerable module and the powerful features it offers, you might think it would be a much more complicated example to study. But it too hinges on Template Method and requires only an each() method to give you all sorts of complex functionality including things like select(), map(), and inject(). If you haven't tried it before, you should certainly try to roll your own Enumerable module to get a sense of just how useful mixins can be.

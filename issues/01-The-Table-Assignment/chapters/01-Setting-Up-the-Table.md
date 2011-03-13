@@ -1,9 +1,9 @@
 
 The most intuitive way to represent a table in Ruby is using a two dimensional array - where an individual row is an array and the collection of rows is also an array. 
 
-In keeping with TDD practices, we'll begin with the simplest possible scenario, namely by initializing an empty table object. 
+In keeping with TDD practices, we'll begin with the simplest possible scenario, in this case, initializing an empty table object. 
 
-To verify that the table is indeed empty, we write a test to check that the table contains no rows:
+To verify that the table is indeed empty, we first write a test to check that the table contains no rows:
 
     require 'test/unit'
     require 'contest'
@@ -19,7 +19,7 @@ To verify that the table is indeed empty, we write a test to check that the tabl
 
     end
 
-Making this test pass is as trivial as setting up a Table class with a single instance method - rows() - that returns an empty array. It is standard practice in TDD to "fake" return values, in this case an empty array, to merely satisfy the test requirements. As we progress, these stand-in return values will of course be replaced by more meaningful code.
+Making this test pass is as trivial as setting up a Table class with a single instance method - rows() - that returns an empty array. It is standard practice in TDD to "fake" return values - in this case, an empty array - to just satisfy the test requirements. As we progress, these stand-in return values will, of course,  be replaced by more meaningful code.
 
     class Table
       def rows
@@ -35,7 +35,7 @@ Next, we need the ability to add rows to the empty table. Let's write a test for
       assert_equal [[1,2,3]], table.rows
     end
 
-To satisfy this requirement, the rows() method can no longer simply return an empty array. Ideally, we want to make this new test pass without causing the first one to fail. This is the most straightforward code that would make both tests pass:
+To satisfy this requirement, the rows() method can no longer simply return an empty array. Ideally, we want to make this new test pass without causing the first one to fail. This is the most straight forward code that would cause both tests to pass:
 
     class Table
       attr_reader :rows
@@ -49,7 +49,7 @@ To satisfy this requirement, the rows() method can no longer simply return an em
       end
     end
 
-Populating the table row by row can quickly become cumbersome. It would be preferable to have the option to initialize the table with data. To accomplish this, we would need to pass a two-dimensional array to the initializer method of the Table class.
+Given a large enough dataset, populating the table row by row would no longer be practical. It would be preferable to have the option to initialize the table with data. To accomplish this, we can pass a two-dimensional array to the initializer method of the Table class.
 
 We need some sample data to work with while testing. In order to have it available to all of our tests, we'll stick it in a setup block:
 
@@ -84,7 +84,7 @@ Next we need to hook up our Table class in such a way that it can accept a two d
 
 Another common feature of tables is to have named columns. In a two-dimensional array the column names could be represented by the first nested array with the following arrays being the actual data rows. 
 
-As things exist now, the first row of @data represents the column names. Thus, if we try to access the first row, the column names are returned instead:
+As things exist now, the first row of @data represents the column names. Therefore, when we try to access what we'd semantically expect to be the first row of data, the column names are returned instead:
 
     >> table = Table.new(@data)
     >> table.rows[0]
@@ -117,6 +117,6 @@ To remedy this, we could extract the first row and assign it to a separate varia
 
 Here have reached a first milestone of sorts. We are able to initialize a Table with or without data and add rows to it manually. We have also laid the foundation to support named columns.
 
-As you can see, taking a test driven approach allows us to focus on small tasks making sure that the code is behaving as it should. Following TDD principles also enables us to write code that progressively takes us in the right direction without having to worry about the full set of requirements at the outset.
+As you can see, taking a test driven approach allows us to make sure that the code is behaving as it should by focusing on small tasks. Following TDD principles also enables us to write code that progressively takes us in the right direction without having to worry about the full set of requirements at the outset.
 
-Although it's a good start this implementation has some undesired consequences. It corrupts the provided data and may fold to bad input. Rather than cover those issues now we'll keep building on the requirements and tackle all pitfalls on chapter 5.
+Although it's a good start, as we shall see, this implementation has some undesired consequences. It corrupts the initialization data and fails to vet user input. Rather than cover those issues now, we'll keep building on the requirements and tackle these pitfalls in chapter 5.

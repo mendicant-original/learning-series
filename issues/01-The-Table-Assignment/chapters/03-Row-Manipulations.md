@@ -1,5 +1,5 @@
 
-We have already set up a method to retrieve the collection of rows. We can also append a new row at the end (see the add_row() method in Chapter 1). Now we want to be able to retrieve a single row. Here is the code to retrieve the contents of a particular row:
+We have already set up a method to retrieve the collection of rows. We can also append a new row at the end (see the add_row() method in Chapter 1). Now we want to be able to retrieve a single row. Following is the code to retrieve the contents of a particular row:
 
     # We will omit this context declaration for the remainder of the chapter
     context "row manipulations" do
@@ -37,7 +37,7 @@ Instead of creating a brand new method for inserting a row at a particular posit
       end
     end
 
-To delete a particular row from our table, we set up our test to check that a deleted row has actually been replaced:
+To proceed with deleting a particular row from our table, we set up a test to check that a deleted row has actually been replaced:
 
     test "can delete a row" do
       to_be_deleted = @table.row(2)
@@ -53,7 +53,7 @@ To delete a particular row from our table, we set up our test to check that a de
       end
     end
 
-Next we need to write a method to triggers a row-level transformation that affects all data cells of that row in a user-defined way. In other words, we have to design our API in such a way it can accept the transformation code as an argument. This is where blocks come into play.
+Next, we need to write a method to trigger a row-level transformation for altering all the data cells of that row in a user-defined way. In other words, we have to design our API in such a way it can accept the transformation code as an argument. This is where blocks come into play.
 
     test "transform row cells" do
       @table.transform_row(0) do |cell| 
@@ -71,9 +71,9 @@ Next we need to write a method to triggers a row-level transformation that affec
       end
     end
 
-Here we take advantage of the Array#map! method which natively accepts a block as an argument and delegate the heavy lifting over to it.
+Here we take advantage of the Array#map! method - which can accept a block as an argument - and delegate the heavy lifting over to it.
 
-There are other use cases where the API would need to respond to user-defined blocks. Say we want to reduce our table data to only contain records of people under 30. That would mean that we'd have to check every row for that condition (age under 30) and only keep those rows that pass the condition. 
+There are other use cases where the API would need to respond to user-defined blocks. Say we want to reduce our table data to only contain records of people under 30. That would mean that we'd have to check every row for that condition (age under 30) and only keep those rows that meet this criteria. 
 
     test "reduce the rows to those that meet a particular conditon" do
       @table.select_rows do |row|
@@ -91,4 +91,4 @@ Again, there's a handy Array method to accomplish this, namely Array#select!
       end
     end
 
-So far so good. Our table implementation is quite capable. Let's implement the last set of requirements in the next chapter.
+So far so good. Our table implementation is starting to take shape. Let's implement the final set of requirements in the next chapter.

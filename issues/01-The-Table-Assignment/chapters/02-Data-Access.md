@@ -1,5 +1,5 @@
 
-The way things stand now, the Table class is siphoning off our first row as the column headers no matter what:
+Currently, the default behavior is for the Table class to siphon off the first row of input data as the column headers :
 
     >> table = Table.new [[1, 2, 3], [4,5,6]]
     >> table.rows[0]
@@ -8,7 +8,7 @@ The way things stand now, the Table class is siphoning off our first row as the 
     >> table.headers
     => [1,2,3]
 
-While we want to allow for column names to be set, that feature should be optional. We need to make that feature configurable. In this case we need to edit a previous test:
+While we want to allow for column names to be set, it would be better if that feature were optional. In other words, the setting of column names needs to be configurable. In this case, we need to edit a previous test:
 
     test "can be initialized with a two-dimensional array" do
       table = Table.new(@data)
@@ -36,7 +36,7 @@ While we want to allow for column names to be set, that feature should be option
       end
     end
 
-Optimally, we would like the API to be able to access the columns either by name or by index, so that we can for instance retrieve the data by asking for "the 'name' field in the second row" or "the first column in the second row".
+Ideally, we would like the API to be able to access the columns either by name or by index. This would allow for data retrieval, for example, by either asking for "the 'name' field in the second row" or for "the first column in the second row".
 
 This is what the tests and implementation for this feature could look like:
 
@@ -74,4 +74,4 @@ This is what the tests and implementation for this feature could look like:
       end
     end
 
-We've covered the simple requirements by now as we're able to properly initialize a table and to access individual cells. In the next chapter we start to implement some of the tricky ones.
+To recap what we have done so far: the table can be initialized with configurable data and individual data cells can be accessed in an intuitive manner.  In the next chapter we'll start to implement some of the more tricky requirements.
