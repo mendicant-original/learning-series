@@ -7,9 +7,7 @@ class Table
   
   attr_reader :rows, :headers, :header_support
   def initialize(data = [], options = {})
-    check_type(data)
     data.each do |row|
-      check_type(row)
       check_length(row, data.first.length, "Inconsistent rows length")
     end
     
@@ -55,7 +53,6 @@ class Table
   # Row Manipulations
 
   def add_row(new_row, pos=nil)
-    check_type(new_row)
     check_length(new_row, max_y, "Inconsistent row length") unless @rows.empty?
     
     i = pos.nil? ? max_x : pos
@@ -92,7 +89,6 @@ class Table
   end
 
   def add_column(col, pos=nil)
-    check_type(col)
     check_length(col, max_x+1, "Inconsistent column length")
     
     col = Marshal.load(Marshal.dump(col))
@@ -153,10 +149,6 @@ class Table
         raise NoColumnError,
               "The column does not exist or the index is out of range"
       end
-    end
-    
-    def check_type(data)
-      raise(ArgumentError, "Input is not an array") unless Array === data
     end
 
     def check_length(data, expected, msg="Input length is inconsistent")
