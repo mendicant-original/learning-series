@@ -197,6 +197,6 @@ Given our current, row-biased approach there is simply no easy way to do this. W
       end
     end
 
-We've completed all the requirements for the assignment and you may find this simple implementation complete with tests here: https://github.com/rmu/learning-series/tree/master/issues/01-The-Table-Assignment/source
+We've completed all the requirements for the assignment and you may find this simple implementation complete with tests [here](https://github.com/rmu/learning-series/tree/master/issues/01-The-Table-Assignment/source).
 
 This implementation is somewhat similar to that submitted by the majority of students in this session but it's not without its weaknesses. These drawbacks are the subject of the next chapter.

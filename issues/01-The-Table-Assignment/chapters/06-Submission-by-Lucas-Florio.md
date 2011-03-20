@@ -13,7 +13,7 @@ The Table class has some separation built-in by sporting short, focused methods.
 
 Now we're going to consider a solution by Lucas Florio which manages to treat rows and columns as wholly separate objects, but without duplicating the data set. The trick is that they don't hold the actual data values, but delegate that responsibility to a Cell class. 
 
-The complete code can be found at: https://github.com/lucasefe/s1-final
+The complete code can be found at: [https://github.com/lucasefe/s1-final](https://github.com/lucasefe/s1-final).
 
 Rows, Columns and Cells
 ----------------------

@@ -7,7 +7,7 @@ In this first installment we will look at the final exam assigned to the RMU cla
 The Problem
 -----------
 
-The task was to build a general purpose table structure that could be used in a wide range of data processing scenarios. You can view the exact list of requirements here on Github: https://github.com/rmu/s1-final
+The task was to build a general purpose table structure that could be used in a wide range of data processing scenarios. You can view the exact list of requirements on Github [here](https://github.com/rmu/s1-final).
 
 At a minimum, the API of the table structure needed to implement the following features:
 

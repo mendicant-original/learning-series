@@ -118,7 +118,10 @@ class LearningSeries < Jambalaya
     if tag.inner_html =~ /page_break/
       start_new_page
     else
-      prose tag.inner_html
+      prose_text = tag.inner_html.gsub(/<a href.+?a>/,
+                                       '<color rgb="#0000EE">\0</color>')
+      
+      prose(prose_text)
     end
   end
   alias :text_to_prawn :p_to_prawn

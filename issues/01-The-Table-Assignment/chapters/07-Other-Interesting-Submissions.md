@@ -7,7 +7,7 @@ Wojciech Piekutowski attempted to cleanly separate concerns in an object oriente
 Eric Gjertsen's Submission
 ---------------------
 
-The complete code can be found at: https://github.com/ericgj/s1-final
+The complete code can be found at: [https://github.com/ericgj/s1-final](https://github.com/ericgj/s1-final).
 
 From the data storage point of view, we've considered the options of storing an array of rows as provided by the user and Lucas Florio's approach which introduces a collection of Cell objects "indexed" by rows and columns. Turns out that there are even more ways of representing the data.
 
@@ -46,7 +46,7 @@ This is how he would change things for future incarnations of the Table class:
 Wojciech Piekutowski's (W.P.) submission
 ----------------------------------------
 
-The complete code can be found at: https://github.com/wpiekutowski/s1-final
+The complete code can be found at: [https://github.com/wpiekutowski/s1-final](https://github.com/wpiekutowski/s1-final).
 
 What makes W.P.'s solution interesting is the way the code is organized. He identified five classes that together make up the functionality necessary to have a working Ruby table implementation. Besides the Table class, there are classes representing the collection of rows and columns (Table::RowsProxy and Table::ColumnsProxy), as well as a class for an individual row and an individual column (Table::Row and Table::Column). 
 

@@ -20,11 +20,11 @@ Getting Involved
 
 If you want to get involved in RMU, there are no shortage of options:
 
-The official website at http://university.rubymendicant.com is the first place you should look if you'd like to know more about us. Keep an eye on the [news page](http://university.rubymendicant.com/changelog.html) to learn about the latest developments in RMU.
+The official website at [http://university.rubymendicant.com](http://university.rubymendicant.com) is the first place you should look if you'd like to know more about us. Keep an eye on the [news page](http://university.rubymendicant.com/changelog.html) to learn about the latest developments in RMU.
 
 On the IRC channel #rmu at Freenode you can chat with the students and staff. The channel is also the place for our monthly Q&A session with special guests.
 
-Follow Gregory Brown on Twitter (http://twitter.com/seacreature) to receive firsthand news about all our recent activities.
+Follow Gregory Brown on Twitter [http://twitter.com/seacreature](http://twitter.com/seacreature) to receive firsthand news about all our recent activities.
 
-And if you'd like to join us, there's no time like the present. Head on over to (insert official puzzlenode link).
+And if you'd like to join us, there's no time like the present. Head on over to our [admission page](http://university.rubymendicant.com/admissions).
 
