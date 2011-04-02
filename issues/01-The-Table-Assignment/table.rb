@@ -2,7 +2,7 @@
 
 require_relative "../../lib/learning_series"
 
-LearningSeries.generate("table.pdf") do
+LearningSeries.generate("RMU-Learning-Series-01.pdf") do
   
   cover("#1 The Table assignment", "Andrea Singh and Felipe Doria")
 

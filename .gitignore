@@ -1,2 +1,2 @@
-# Ignore all generated pdfs
-*.pdf
+# No longer ignoring all generated pdfs
+# *.pdf
