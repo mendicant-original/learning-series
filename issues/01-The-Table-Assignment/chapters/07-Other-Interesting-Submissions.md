@@ -163,5 +163,5 @@ A significant feature of the code is the including of the Enumerable module in t
 <h6 title="From the Practicing Ruby Newsletter">
 (....), there is surprising power in having a primitive built into your programming language which trivializes the implementation of the Template Method design pattern. If you look at Ruby's Enumerable module and the powerful features it offers, you might think it would be a much more complicated example to study. But it too hinges on Template Method and requires only an each() method to give you all sorts of complex functionality including things like select(), map(), and inject(). If you haven't tried it before, you should certainly try to roll your own Enumerable module to get a sense of just how useful mixins can be.
 
-[Practicing Ruby] Issue #9: Uses For Modules, Part 2 of 4 by Gregory Brown
+Practicing Ruby Issue #9: Uses For Modules, Part 2 of 4 by Gregory Brown
 </h6>

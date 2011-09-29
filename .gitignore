@@ -1,2 +1,4 @@
 # No longer ignoring all generated pdfs
 # *.pdf
+.DS_Store
+issues/**/.DS_Store

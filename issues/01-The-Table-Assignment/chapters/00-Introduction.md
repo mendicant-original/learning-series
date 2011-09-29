@@ -1,8 +1,10 @@
-The Ruby Mendicant University (RMU) - founded by "Ruby Best Practices" author, Gregory Brown - is a friendly, supportive online ruby-learning community. The on-going RMU courses feature an eclectic collection of practical problems that challenge students to test and deepen their core understanding of the Ruby programming language. 
+[Mendicant University (MU)](http://university.rubymendicant.com/) is a free online school aimed at socially minded software developers. It was founded in 2010 by [Gregory Brown](http://majesticseacreature.com/), author of the ["Practicing Ruby"](http://practicingruby.com/) weekly newsletter and original developer of the PDF generation library Prawn. 
 
-Once a particular course is completed, the assignments are posted publicly and are quite useful for self-study. The RMU Learning Series was conceived as a means of providing an "under the hood" examination of solutions submitted by RMU alumni. Its purpose is not only to give other students an idea of what constitutes an acceptable solution and but also to provide insight into the type of reasoning that goes into crafting one.
+The on-going MU three-week core courses focus on practical problems, designed to deepen the students' understanding of software programming. To date, over sixty students have successfully completed the course and achieved MU alumni status.
 
-In this first installment we will look at the final exam assigned to the RMU class session of September 2010.
+Once a course session is completed, the [assignments are posted publicly](http://university.rubymendicant.com/resources/learning_materials.html) and are can be used for self-study. The MU Learning Series was conceived as a means of providing an "under the hood" examination of real solutions submitted by alumni. The intention is to allow a glimpse into the type of reasoning that went into coming up with one possible solution.
+
+In this first installment we will look at one of the assignments from the MU session of September 2010. 
 
 The Problem
 -----------
@@ -24,7 +26,7 @@ The first four chapters are a walk-through of this TDD approach and, as we shall
 Test Environment
 ----------------
 
-We will use the Test::Unit library from the Ruby stdlib and the contest gem. The latter adds a thin layer on top of the Test::Unit API, allowing us to write for example:
+We will use the `Test::Unit` library from the Ruby stdlib and the contest gem. The latter adds a thin layer on top of the Test::Unit API, allowing us to write for example:
     
     test "should do stuff" do
       assert true
