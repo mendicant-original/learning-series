@@ -8,7 +8,7 @@ This Series examines actual solutions submitted by alumni to a particular proble
 Released Issues
 ---------------
 
-1. [The Table Assignment](https://github.com/rmu/learning-series/blob/master/issues/01-The-Table-Assignment/RMU-Learning-Series-01.pdf?raw=true)
+1. [The Table Assignment](https://github.com/rmu/learning-series/blob/master/issues/01-The-Table-Assignment/MU-Learning-Series-01.pdf?raw=true)
 
 Usage
 -----
